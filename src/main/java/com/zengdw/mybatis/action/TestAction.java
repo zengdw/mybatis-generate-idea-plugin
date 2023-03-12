@@ -1,15 +1,35 @@
 package com.zengdw.mybatis.action;
 
+import com.intellij.database.model.DasTable;
+import com.intellij.database.psi.DbDataSource;
+import com.intellij.database.psi.DbNamespaceImpl;
+import com.intellij.database.util.DasUtil;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.openapi.actionSystem.PlatformCoreDataKeys;
+import com.intellij.psi.PsiElement;
+import com.intellij.util.containers.JBIterable;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class TestAction extends AnAction {
 
     @Override
     public void actionPerformed(AnActionEvent e) {
-        Thread thread = Thread.currentThread();
-        ClassLoader originalClassLoader = thread.getContextClassLoader();
-        ClassLoader pluginClassLoader = this.getClass().getClassLoader();
+        PsiElement psiElement = e.getData(PlatformCoreDataKeys.PSI_ELEMENT).getParent();
+        String schema = ((DbNamespaceImpl) psiElement).getName();
+        // 获取选中的表
+        PsiElement[] selectTableElements = e.getData(PlatformCoreDataKeys.PSI_ELEMENT_ARRAY);
+        JBIterable<? extends DasTable> tables = DasUtil.getTables((DbDataSource) psiElement.getParent());
+        List<? extends DasTable> allTableList = tables.toList().stream().filter(t -> t.getDasParent().getName().equals(schema)).collect(Collectors.toList());
         System.out.println(3);
+    }
+
+    @Override
+    public void update(@NotNull AnActionEvent e) {
+        DataContext dataContext = e.getDataContext();
     }
 }
