@@ -9,6 +9,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformCoreDataKeys;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.containers.JBIterable;
+import com.zengdw.mybatis.view.CodeGenerateDialog;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,6 +28,9 @@ public class TestAction extends AnAction {
         JBIterable<? extends DasTable> tables = DasUtil.getTables((DbDataSource) psiElement.getParent());
         List<? extends DasTable> allTableList = tables.toList().stream().filter(t -> t.getDasParent().getName().equals(schema)).collect(Collectors.toList());
         System.out.println(3);
+
+        CodeGenerateDialog dialog = new CodeGenerateDialog(e.getProject());
+        dialog.show();
     }
 
 }

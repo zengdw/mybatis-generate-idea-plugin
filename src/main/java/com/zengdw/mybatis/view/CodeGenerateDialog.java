@@ -14,8 +14,12 @@ import javax.swing.*;
 public class CodeGenerateDialog extends DialogWrapper {
     private final JPanel rootPanel = new JPanel();
 
-    protected CodeGenerateDialog(@Nullable Project project) {
+    public CodeGenerateDialog(@Nullable Project project) {
         super(project);
+
+        rootPanel.add(new PropertyPanel());
+
+        super.init();
     }
 
     @Override
