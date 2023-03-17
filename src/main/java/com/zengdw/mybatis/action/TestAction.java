@@ -6,15 +6,16 @@ import com.intellij.database.psi.DbNamespaceImpl;
 import com.intellij.database.util.DasUtil;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.PlatformCoreDataKeys;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.containers.JBIterable;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * @author zengd
+ */
 public class TestAction extends AnAction {
 
     @Override
@@ -28,8 +29,4 @@ public class TestAction extends AnAction {
         System.out.println(3);
     }
 
-    @Override
-    public void update(@NotNull AnActionEvent e) {
-        DataContext dataContext = e.getDataContext();
-    }
 }
