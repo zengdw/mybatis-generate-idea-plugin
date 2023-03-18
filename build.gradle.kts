@@ -12,6 +12,11 @@ repositories {
     mavenCentral()
 }
 
+dependencies {
+    compileOnly("org.projectlombok:lombok:1.18.24")
+
+}
+
 // Configure Gradle IntelliJ Plugin
 // Read more: https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
 intellij {
