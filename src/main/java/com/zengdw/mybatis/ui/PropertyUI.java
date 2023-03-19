@@ -37,7 +37,7 @@ public class PropertyUI {
 
         javaModelPathBtn.addActionListener(e -> {
             String path = btnAction(null);
-            javaModelPath.setText(path);
+            if (null != path) javaModelPath.setText(path);
         });
     }
 
@@ -57,6 +57,7 @@ public class PropertyUI {
         FileChooserDialogImpl fileChooserDialog = new FileChooserDialogImpl(chooserDescriptor, project);
         fileChooserDialog.setTitle("Java Model Path Select");
         VirtualFile[] files = fileChooserDialog.choose(project);
+        if (files.length == 0) return null;
         String selectFilePath = files[0].getCanonicalPath();
         return selectFilePath.substring(currentDirectoryPath.length() + 1);
     }
