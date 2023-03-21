@@ -8,7 +8,6 @@ import com.intellij.database.util.DasUtil;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.LangDataKeys;
-import com.intellij.openapi.actionSystem.PlatformCoreDataKeys;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.containers.JBIterable;
 import org.jetbrains.annotations.NotNull;
@@ -20,15 +19,14 @@ import java.util.stream.Stream;
 /**
  * @author zengd
  */
-public class TestAction extends AnAction {
+public class MybatisGenerateAction extends AnAction {
 
     @Override
     public void actionPerformed(AnActionEvent e) {
-        PsiElement psiElement = e.getData(PlatformCoreDataKeys.PSI_ELEMENT).getParent();
+        PsiElement psiElement = e.getData(LangDataKeys.PSI_ELEMENT).getParent();
         String schema = ((DbNamespaceImpl) psiElement).getName();
         // 获取选中的表
-        PsiElement[] selectTableElements = e.getData(PlatformCoreDataKeys.PSI_ELEMENT_ARRAY);
-        // 获取所有表
+        PsiElement[] selectTableElements = e.getData(LangDataKeys.PSI_ELEMENT_ARRAY);
         JBIterable<? extends DasTable> tables = DasUtil.getTables((DbDataSource) psiElement.getParent());
         List<? extends DasTable> allTableList = tables.toList().stream().filter(t -> t.getDasParent().getName().equals(schema)).collect(Collectors.toList());
 

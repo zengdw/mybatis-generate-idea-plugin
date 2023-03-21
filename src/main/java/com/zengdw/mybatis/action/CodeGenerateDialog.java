@@ -5,11 +5,9 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.zengdw.mybatis.ui.PropertyUI;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
 
 /**
  * @author zengd
@@ -17,48 +15,24 @@ import java.awt.event.ActionEvent;
  * @date 2023/3/14 9:26
  */
 public class CodeGenerateDialog extends DialogWrapper {
-    private final JPanel rootPanel = new JPanel();
-    private final PropertyUI propertyUI;
-    private Action previous;
-    private Action next;
+    private final JPanel rootPanel;
 
     public CodeGenerateDialog(AnActionEvent e) {
         super(e.getProject());
+        setResizable(false);
 
         Module[] modules = ModuleManager.getInstance(e.getProject()).getModules();
-        propertyUI = new PropertyUI(e.getProject(), modules);
-        setResizable(false);
-        rootPanel.add(propertyUI.getRootPanel());
-        createAction();
+        PropertyUI propertyUI = new PropertyUI(e.getProject(), modules);
+        rootPanel = propertyUI.getRootPanel();
 
-        disableAction(previous, false);
         super.init();
     }
 
-    private void disableAction(Action action, boolean enabled) {
-        action.setEnabled(enabled);
-    }
-
-    private void createAction() {
-        previous = new DialogWrapperAction("Previous") {
-            @Override
-            protected void doAction(ActionEvent e) {
-                System.out.println("previous");
-            }
-        };
-        next = new DialogWrapperAction("Next") {
-            @Override
-            protected void doAction(ActionEvent e) {
-                System.out.println("next");
-            }
-        };
-    }
-
     @Override
-    protected Action @NotNull [] createActions() {
-        return new Action[]{previous, next, getCancelAction()};
-    }
+    protected void doOKAction() {
 
+        super.doOKAction();
+    }
 
     @Override
     protected @Nullable JComponent createCenterPanel() {

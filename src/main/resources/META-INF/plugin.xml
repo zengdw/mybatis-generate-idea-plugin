@@ -34,7 +34,7 @@
 
   </extensions>
   <actions>
-    <action id="Test" class="com.zengdw.mybatis.action.TestAction" text="Test">
+    <action id="Test" class="com.zengdw.mybatis.action.MybatisGenerateAction" text="Test">
       <add-to-group group-id="DatabaseViewPopupMenu" anchor="first"/>
     </action>
   </actions>

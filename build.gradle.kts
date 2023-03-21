@@ -13,14 +13,16 @@ repositories {
 }
 
 dependencies {
-    compileOnly("org.projectlombok:lombok:1.18.24")
+    implementation("org.mybatis.generator:mybatis-generator-core:1.4.1")
+    implementation("org.freemarker:freemarker:2.3.32")
+    implementation("com.github.javaparser:javaparser-symbol-solver-core:3.24.4")
 
 }
 
 // Configure Gradle IntelliJ Plugin
 // Read more: https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
 intellij {
-    version.set("2022.1.4")
+    version.set("2020.1.1")
     type.set("IU") // Target IDE Platform
 
     plugins.set(listOf("com.intellij.database"))
@@ -35,7 +37,7 @@ tasks {
 
     patchPluginXml {
         // 指定插件兼容的idea的最小和最大版本
-        sinceBuild.set("221")
+        sinceBuild.set("201")
         untilBuild.set("231.*")
     }
 
