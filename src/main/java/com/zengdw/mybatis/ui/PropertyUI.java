@@ -1,14 +1,15 @@
 package com.zengdw.mybatis.ui;
 
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.ex.FileChooserDialogImpl;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectUtil;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.zengdw.mybatis.util.FileUtil;
+import com.zengdw.mybatis.override.MyFileChooserDescriptor;
 import com.zengdw.mybatis.vo.MyModule;
+import com.zengdw.mybatis.vo.PropertyVO;
 
 import javax.swing.*;
 import java.util.Arrays;
@@ -84,32 +85,64 @@ public class PropertyUI {
     }
 
     private String btnAction(String prefix, int type) {
-        Object selectModule = this.moduleComboBox.getSelectedItem();
-        String currentDirectoryPath = project.getBasePath();
-        if (null != selectModule) {
-            MyModule module = (MyModule) selectModule;
-            currentDirectoryPath = module.getPath();
-        }
-        currentDirectoryPath = FileUtil.separatorConversion(currentDirectoryPath);
+        MyModule selectModule = (MyModule) this.moduleComboBox.getSelectedItem();
+        VirtualFile virtualFile = ProjectUtil.guessModuleDir(selectModule.getModule());
+        String currentDirectoryPath = virtualFile.getPresentableUrl();
 
-        VirtualFile projectDir = ProjectUtil.guessProjectDir(project);
-
-        FileChooserDescriptor chooserDescriptor = new FileChooserDescriptor(false, true, false, false, false, false);
-        chooserDescriptor.withRoots(projectDir);
+        MyFileChooserDescriptor chooserDescriptor = new MyFileChooserDescriptor(false, true, false, false, false, false);
+        chooserDescriptor.withFolderFilter(file -> ModuleUtil.moduleContainsFile(selectModule.getModule(), file, false))
+                .withRoots(virtualFile);
         FileChooserDialogImpl fileChooserDialog = new FileChooserDialogImpl(chooserDescriptor, project);
-        VirtualFile[] files = fileChooserDialog.choose(project, projectDir);
+        VirtualFile[] files = fileChooserDialog.choose(project);
         if (files.length == 0) return null;
         String selectFilePath = files[0].getPresentableUrl();
-        selectFilePath = FileUtil.separatorConversion(selectFilePath);
-        String path = selectFilePath.replace(currentDirectoryPath + FileUtil.SEPARATOR + prefix, "");
         if (type == 1) {
-            return path;
+            return selectFilePath;
         }
-        return path.replaceAll(FileUtil.SEPARATOR, ".").replaceFirst("\\.", "");
+        return selectFilePath.replace(currentDirectoryPath + "/" + prefix, "").replaceAll("/", ".").replaceFirst("\\.", "");
     }
 
     private void createUIComponents() {
-        this.moduleComboBox = new ComboBox<>(Arrays.stream(moduleList).map(m -> new MyModule(m.getName(), ProjectUtil.guessModuleDir(m).getPresentableUrl())).toArray(MyModule[]::new));
+        this.moduleComboBox = new ComboBox<>(Arrays.stream(moduleList).map(m -> new MyModule(m.getName(), m)).toArray(MyModule[]::new));
     }
 
+    public void setData(PropertyVO data) {
+        if (null != data.getModule()) {
+            moduleComboBox.setSelectedItem(data.getModule());
+        }
+        javaModelPath.setText(data.getJavaModelPath());
+        mapperPath.setText(data.getMapperPath());
+        mapperXmlPath.setText(data.getMapperXmlPath());
+        javaModelPackage.setText(data.getJavaModelPackage());
+        mapperPackage.setText(data.getMapperPackage());
+        mapperXmlPackage.setText(data.getMapperXmlPackage());
+        mapperAnnotationCheckBox.setSelected(data.isMapperAnnotation());
+        generateCommentCheckBox.setSelected(data.isComment());
+        mybatisPlusCheckBox.setSelected(data.isMybatisPlus());
+        exampleQueryCheckBox.setSelected(data.isExample());
+        lombokCheckBox.setSelected(data.isLombok());
+        serializableCheckBox.setSelected(data.isSerializable());
+        trimStringCheckBox.setSelected(data.isTrimString());
+        toStringCheckBox.setSelected(data.isToString());
+        mergeFileCheckBox.setSelected(data.isMergeFile());
+    }
+
+    public void getData(PropertyVO data) {
+        data.setModule((MyModule) moduleComboBox.getSelectedItem());
+        data.setJavaModelPath(javaModelPath.getText());
+        data.setMapperPath(mapperPath.getText());
+        data.setMapperXmlPath(mapperXmlPath.getText());
+        data.setJavaModelPackage(javaModelPackage.getText());
+        data.setMapperPackage(mapperPackage.getText());
+        data.setMapperXmlPackage(mapperXmlPackage.getText());
+        data.setMapperAnnotation(mapperAnnotationCheckBox.isSelected());
+        data.setComment(generateCommentCheckBox.isSelected());
+        data.setMybatisPlus(mybatisPlusCheckBox.isSelected());
+        data.setExample(exampleQueryCheckBox.isSelected());
+        data.setLombok(lombokCheckBox.isSelected());
+        data.setSerializable(serializableCheckBox.isSelected());
+        data.setTrimString(trimStringCheckBox.isSelected());
+        data.setToString(toStringCheckBox.isSelected());
+        data.setMergeFile(mergeFileCheckBox.isSelected());
+    }
 }

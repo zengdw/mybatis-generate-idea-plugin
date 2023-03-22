@@ -1,33 +1,28 @@
 package com.zengdw.mybatis.vo;
 
+import com.intellij.openapi.module.Module;
+import org.jetbrains.annotations.NotNull;
+
 /**
  * @author zengd
  * @version 1.0
- * @date 2023/3/20 11:13
+ * @date 2023/3/22 11:22
  */
 public class MyModule {
-    private String name;
-    private String path;
+    private final String name;
+    private final Module module;
 
-    public MyModule(String name, String path) {
+    public MyModule(@NotNull String name, Module module) {
         this.name = name;
-        this.path = path;
+        this.module = module;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
+    public Module getModule() {
+        return module;
     }
 
     @Override

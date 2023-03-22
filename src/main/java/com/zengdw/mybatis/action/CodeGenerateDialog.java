@@ -5,6 +5,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.zengdw.mybatis.ui.PropertyUI;
+import com.zengdw.mybatis.vo.PropertyVO;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -16,13 +17,15 @@ import javax.swing.*;
  */
 public class CodeGenerateDialog extends DialogWrapper {
     private final JPanel rootPanel;
+    private final PropertyUI propertyUI;
 
     public CodeGenerateDialog(AnActionEvent e) {
         super(e.getProject());
         setResizable(false);
 
         Module[] modules = ModuleManager.getInstance(e.getProject()).getModules();
-        PropertyUI propertyUI = new PropertyUI(e.getProject(), modules);
+        propertyUI = new PropertyUI(e.getProject(), modules);
+        propertyUI.setData(PropertyVO.of());
         rootPanel = propertyUI.getRootPanel();
 
         super.init();
@@ -30,7 +33,7 @@ public class CodeGenerateDialog extends DialogWrapper {
 
     @Override
     protected void doOKAction() {
-
+        propertyUI.getData(PropertyVO.of());
         super.doOKAction();
     }
 
