@@ -38,6 +38,12 @@ public class CodeGenerateDialog extends DialogWrapper {
     }
 
     @Override
+    public void doCancelAction() {
+        propertyUI.getData(PropertyVO.of());
+        super.doCancelAction();
+    }
+
+    @Override
     protected @Nullable JComponent createCenterPanel() {
         return rootPanel;
     }

@@ -12,6 +12,7 @@ import com.zengdw.mybatis.vo.MyModule;
 import com.zengdw.mybatis.vo.PropertyVO;
 
 import javax.swing.*;
+import java.io.File;
 import java.util.Arrays;
 
 /**
@@ -51,6 +52,11 @@ public class PropertyUI {
         this.moduleList = moduleList;
 
         btnAddAction();
+        moduleComboBox.addItemListener(e -> {
+            javaModelPackage.setText("");
+            mapperPackage.setText("");
+            mapperXmlPackage.setText("");
+        });
     }
 
     private void btnAddAction() {
@@ -87,7 +93,7 @@ public class PropertyUI {
     private String btnAction(String prefix, int type) {
         MyModule selectModule = (MyModule) this.moduleComboBox.getSelectedItem();
         VirtualFile virtualFile = ProjectUtil.guessModuleDir(selectModule.getModule());
-        String currentDirectoryPath = virtualFile.getPresentableUrl();
+        String currentDirectoryPath = virtualFile.getPresentableUrl().replace(File.separator, "/");
 
         MyFileChooserDescriptor chooserDescriptor = new MyFileChooserDescriptor(false, true, false, false, false, false);
         chooserDescriptor.withFolderFilter(file -> ModuleUtil.moduleContainsFile(selectModule.getModule(), file, false))
@@ -95,11 +101,12 @@ public class PropertyUI {
         FileChooserDialogImpl fileChooserDialog = new FileChooserDialogImpl(chooserDescriptor, project);
         VirtualFile[] files = fileChooserDialog.choose(project);
         if (files.length == 0) return null;
-        String selectFilePath = files[0].getPresentableUrl();
+        String selectFilePath = files[0].getPresentableUrl().replace(File.separator, "/");
+        selectFilePath = selectFilePath.replace(currentDirectoryPath + "/" + prefix, "");
         if (type == 1) {
             return selectFilePath;
         }
-        return selectFilePath.replace(currentDirectoryPath + "/" + prefix, "").replaceAll("/", ".").replaceFirst("\\.", "");
+        return selectFilePath.replace("/", ".").replaceFirst("\\.", "");
     }
 
     private void createUIComponents() {

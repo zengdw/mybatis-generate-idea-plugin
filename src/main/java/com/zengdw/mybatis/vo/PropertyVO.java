@@ -12,14 +12,14 @@ public class PropertyVO {
     private String mapperPackage;
     private String mapperXmlPackage;
     private boolean mapperAnnotation;
-    private boolean comment;
+    private boolean comment = true;
     private boolean mybatisPlus;
     private boolean example;
     private boolean lombok;
     private boolean serializable;
     private boolean trimString;
     private boolean toString;
-    private boolean mergeFile;
+    private boolean mergeFile = true;
 
     private static PropertyVO instance;
 
