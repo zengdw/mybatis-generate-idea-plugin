@@ -1,5 +1,9 @@
 package com.zengdw.mybatis.vo;
 
+import com.intellij.database.psi.DbTable;
+
+import java.util.List;
+
 /**
  * @author zengd
  */
@@ -11,15 +15,16 @@ public class PropertyVO {
     private String javaModelPackage;
     private String mapperPackage;
     private String mapperXmlPackage;
-    private boolean mapperAnnotation;
-    private boolean comment = true;
-    private boolean mybatisPlus;
-    private boolean example;
-    private boolean lombok;
-    private boolean serializable;
-    private boolean trimString;
-    private boolean toString;
-    private boolean mergeFile = true;
+    private Boolean mapperAnnotation;
+    private Boolean comment = true;
+    private Boolean mybatisPlus;
+    private Boolean example;
+    private Boolean lombok;
+    private Boolean serializable;
+    private Boolean trimString;
+    private Boolean toString;
+    private Boolean mergeFile = true;
+    private List<DbTable> tableList;
 
     private static PropertyVO instance;
 
@@ -159,5 +164,13 @@ public class PropertyVO {
 
     public void setMergeFile(final boolean mergeFile) {
         this.mergeFile = mergeFile;
+    }
+
+    public List<DbTable> getTableList() {
+        return tableList;
+    }
+
+    public void setTableList(List<DbTable> tableList) {
+        this.tableList = tableList;
     }
 }

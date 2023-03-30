@@ -10,6 +10,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.zengdw.mybatis.override.MyFileChooserDescriptor;
 import com.zengdw.mybatis.vo.MyModule;
 import com.zengdw.mybatis.vo.PropertyVO;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
 import java.io.File;
@@ -134,14 +135,14 @@ public class PropertyUI {
         mergeFileCheckBox.setSelected(data.isMergeFile());
     }
 
-    public void getData(PropertyVO data) {
+    public void getData(PropertyVO data) throws Exception {
         data.setModule((MyModule) moduleComboBox.getSelectedItem());
-        data.setJavaModelPath(javaModelPath.getText());
-        data.setMapperPath(mapperPath.getText());
-        data.setMapperXmlPath(mapperXmlPath.getText());
-        data.setJavaModelPackage(javaModelPackage.getText());
-        data.setMapperPackage(mapperPackage.getText());
-        data.setMapperXmlPackage(mapperXmlPackage.getText());
+        data.setJavaModelPath(isEmpty(javaModelPath.getText()));
+        data.setMapperPath(isEmpty(mapperPath.getText()));
+        data.setMapperXmlPath(isEmpty(mapperXmlPath.getText()));
+        data.setJavaModelPackage(isEmpty(javaModelPackage.getText()));
+        data.setMapperPackage(isEmpty(mapperPackage.getText()));
+        data.setMapperXmlPackage(isEmpty(mapperXmlPackage.getText()));
         data.setMapperAnnotation(mapperAnnotationCheckBox.isSelected());
         data.setComment(generateCommentCheckBox.isSelected());
         data.setMybatisPlus(mybatisPlusCheckBox.isSelected());
@@ -151,5 +152,12 @@ public class PropertyUI {
         data.setTrimString(trimStringCheckBox.isSelected());
         data.setToString(toStringCheckBox.isSelected());
         data.setMergeFile(mergeFileCheckBox.isSelected());
+    }
+
+    private String isEmpty(String path) throws Exception {
+        if (StringUtils.isBlank(path)) {
+            throw new Exception("请配置包路径");
+        }
+        return path;
     }
 }

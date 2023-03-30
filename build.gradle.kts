@@ -13,6 +13,7 @@ repositories {
 }
 
 dependencies {
+    implementation("uk.com.robust-it:cloning:1.9.2")
     implementation("org.mybatis.generator:mybatis-generator-core:1.4.1")
     implementation("org.freemarker:freemarker:2.3.32")
     implementation("com.github.javaparser:javaparser-symbol-solver-core:3.24.4")

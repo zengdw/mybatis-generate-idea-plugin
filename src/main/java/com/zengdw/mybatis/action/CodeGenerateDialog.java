@@ -4,6 +4,8 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.ui.DialogWrapper;
+import com.intellij.openapi.ui.Messages;
+import com.zengdw.mybatis.generate.GenerateCode;
 import com.zengdw.mybatis.ui.PropertyUI;
 import com.zengdw.mybatis.vo.PropertyVO;
 import org.jetbrains.annotations.Nullable;
@@ -33,14 +35,23 @@ public class CodeGenerateDialog extends DialogWrapper {
 
     @Override
     protected void doOKAction() {
-        propertyUI.getData(PropertyVO.of());
-        super.doOKAction();
+        try {
+            propertyUI.getData(PropertyVO.of());
+
+            GenerateCode.generate();
+            super.doOKAction();
+        } catch (Exception e) {
+            Messages.showMessageDialog(e.getMessage(), "Tips", null);
+        }
     }
 
     @Override
     public void doCancelAction() {
-        propertyUI.getData(PropertyVO.of());
-        super.doCancelAction();
+        try {
+            super.doCancelAction();
+        } catch (Exception e) {
+            Messages.showMessageDialog(e.getMessage(), "Tips", null);
+        }
     }
 
     @Override
