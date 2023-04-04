@@ -4,9 +4,6 @@ import com.intellij.database.psi.DbTable;
 import com.intellij.openapi.project.ProjectUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.zengdw.mybatis.vo.PropertyVO;
-import org.mybatis.generator.api.GeneratedJavaFile;
-import org.mybatis.generator.api.GeneratedXmlFile;
-import org.mybatis.generator.api.IntrospectedTable;
 import org.mybatis.generator.api.ShellCallback;
 import org.mybatis.generator.config.*;
 
@@ -20,10 +17,6 @@ import java.util.List;
  * @date 2023/3/29 11:13
  */
 public class GenerateCode {
-    private final List<GeneratedJavaFile> generatedJavaFiles = new ArrayList<>();
-    private final List<GeneratedXmlFile> generatedXmlFiles = new ArrayList<>();
-    private final List<IntrospectedTable> introspectedTables = new ArrayList<>();
-
     public static void generate() throws Exception {
         List<String> warnings = new ArrayList<>();
         ShellCallback callback = new MyShellCallback();
