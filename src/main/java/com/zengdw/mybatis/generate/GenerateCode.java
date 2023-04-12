@@ -4,12 +4,18 @@ import com.intellij.database.psi.DbTable;
 import com.intellij.openapi.project.ProjectUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.zengdw.mybatis.vo.PropertyVO;
-import org.mybatis.generator.api.ShellCallback;
+import org.mybatis.generator.api.*;
+import org.mybatis.generator.codegen.RootClassInfo;
 import org.mybatis.generator.config.*;
+import org.mybatis.generator.internal.ObjectFactory;
+import org.mybatis.generator.internal.XmlFileMergerJaxp;
 
-import java.io.File;
+import java.io.*;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.mybatis.generator.internal.util.messages.Messages.getString;
 
 /**
  * @author zengd
@@ -17,20 +23,166 @@ import java.util.List;
  * @date 2023/3/29 11:13
  */
 public class GenerateCode {
-    public static void generate() throws Exception {
+    private final ShellCallback shellCallback = new MyShellCallback();
+    private final List<GeneratedJavaFile> generatedJavaFiles = new ArrayList<>();
+    private final List<GeneratedXmlFile> generatedXmlFiles = new ArrayList<>();
+    private final List<GeneratedKotlinFile> generatedKotlinFiles = new ArrayList<>();
+    private final List<GeneratedFile> otherGeneratedFiles = new ArrayList<>();
+
+    public void generate() throws Exception {
         List<String> warnings = new ArrayList<>();
-        ShellCallback callback = new MyShellCallback();
+        ProgressCallback callback = new ProgressCallback() {
+        };
+
+        generatedJavaFiles.clear();
+        generatedXmlFiles.clear();
+        ObjectFactory.reset();
+        RootClassInfo.reset();
 
         GenerateContext context = generateContext();
-        /*context.setIntrospectedTables(PropertyVO.of().getTableList());
+        context.introspectTables(callback, warnings, null);
+        context.generateFiles(callback, generatedJavaFiles,
+                generatedXmlFiles, generatedKotlinFiles, otherGeneratedFiles, warnings);
 
-        MyBatisGenerator myBatisGenerator = new MyBatisGenerator(config, callback, warnings);
-        myBatisGenerator.generate(new ProgressCallback() {
-            @Override
-            public void done() {
-                Messages.showMessageDialog("代码生成完成", "Tips", null);
+        for (GeneratedXmlFile gxf : generatedXmlFiles) {
+            writeGeneratedXmlFile(gxf, callback);
+        }
+
+        for (GeneratedJavaFile gjf : generatedJavaFiles) {
+            writeGeneratedJavaFile(gjf, callback);
+        }
+
+        for (GeneratedKotlinFile gkf : generatedKotlinFiles) {
+            writeGeneratedFile(gkf, callback);
+        }
+
+        for (GeneratedFile gf : otherGeneratedFiles) {
+            writeGeneratedFile(gf, callback);
+        }
+    }
+
+    private void writeGeneratedFile(GeneratedFile gf, ProgressCallback callback)
+            throws Exception {
+        File targetFile;
+        String source;
+        File directory = shellCallback.getDirectory(gf
+                .getTargetProject(), gf.getTargetPackage());
+        targetFile = new File(directory, gf.getFileName());
+        if (targetFile.exists()) {
+            if (shellCallback.isOverwriteEnabled()) {
+                source = gf.getFormattedContent();
+            } else {
+                source = gf.getFormattedContent();
+                targetFile = getUniqueFileName(directory, gf
+                        .getFileName());
             }
-        });*/
+        } else {
+            source = gf.getFormattedContent();
+        }
+
+        callback.checkCancel();
+        callback.startTask(getString(
+                "Progress.15", targetFile.getName())); //$NON-NLS-1$
+        writeFile(targetFile, source, gf.getFileEncoding());
+    }
+
+    private void writeGeneratedJavaFile(GeneratedJavaFile gjf, ProgressCallback callback)
+            throws Exception {
+        File targetFile;
+        String source;
+        File directory = shellCallback.getDirectory(gjf
+                .getTargetProject(), gjf.getTargetPackage());
+        targetFile = new File(directory, gjf.getFileName());
+        if (targetFile.exists()) {
+            if (shellCallback.isMergeSupported()) {
+                source = shellCallback.mergeJavaFile(gjf
+                                .getFormattedContent(), targetFile,
+                        MergeConstants.getOldElementTags(),
+                        gjf.getFileEncoding());
+            } else if (shellCallback.isOverwriteEnabled()) {
+                source = gjf.getFormattedContent();
+            } else {
+                source = gjf.getFormattedContent();
+                targetFile = getUniqueFileName(directory, gjf
+                        .getFileName());
+            }
+        } else {
+            source = gjf.getFormattedContent();
+        }
+
+        callback.checkCancel();
+        callback.startTask(getString(
+                "Progress.15", targetFile.getName())); //$NON-NLS-1$
+        writeFile(targetFile, source, gjf.getFileEncoding());
+    }
+
+    private void writeGeneratedXmlFile(GeneratedXmlFile gxf, ProgressCallback callback)
+            throws Exception {
+        File targetFile;
+        String source;
+        File directory = shellCallback.getDirectory(gxf
+                .getTargetProject(), gxf.getTargetPackage());
+        targetFile = new File(directory, gxf.getFileName());
+        if (targetFile.exists()) {
+            if (gxf.isMergeable()) {
+                source = XmlFileMergerJaxp.getMergedSource(gxf,
+                        targetFile);
+            } else if (shellCallback.isOverwriteEnabled()) {
+                source = gxf.getFormattedContent();
+            } else {
+                source = gxf.getFormattedContent();
+                targetFile = getUniqueFileName(directory, gxf
+                        .getFileName());
+            }
+        } else {
+            source = gxf.getFormattedContent();
+        }
+
+        callback.checkCancel();
+        callback.startTask(getString(
+                "Progress.15", targetFile.getName())); //$NON-NLS-1$
+        writeFile(targetFile, source, gxf.getFileEncoding());
+    }
+
+    private void writeFile(File file, String content, String fileEncoding) throws IOException {
+        try (FileOutputStream fos = new FileOutputStream(file, false)) {
+            OutputStreamWriter osw;
+            if (fileEncoding == null) {
+                osw = new OutputStreamWriter(fos);
+            } else {
+                osw = new OutputStreamWriter(fos, Charset.forName(fileEncoding));
+            }
+
+            try (BufferedWriter bw = new BufferedWriter(osw)) {
+                bw.write(content);
+            }
+        }
+    }
+
+    private File getUniqueFileName(File directory, String fileName) {
+        File answer = null;
+
+        // try up to 1000 times to generate a unique file name
+        StringBuilder sb = new StringBuilder();
+        for (int i = 1; i < 1000; i++) {
+            sb.setLength(0);
+            sb.append(fileName);
+            sb.append('.');
+            sb.append(i);
+
+            File testFile = new File(directory, sb.toString());
+            if (!testFile.exists()) {
+                answer = testFile;
+                break;
+            }
+        }
+
+        if (answer == null) {
+            throw new RuntimeException(getString(
+                    "RuntimeError.3", directory.getAbsolutePath())); //$NON-NLS-1$
+        }
+
+        return answer;
     }
 
     private static GenerateContext generateContext() {
@@ -39,6 +191,7 @@ public class GenerateCode {
 
         context.setId("simple");
         context.setTargetRuntime(property.isExample() ? "MyBatis3" : "MyBatis3Simple");
+        context.addProperty(PropertyRegistry.CONTEXT_JAVA_FILE_ENCODING, "UTF-8");
 
         if (property.isLombok()) {
             PluginConfiguration pluginConfiguration = new PluginConfiguration();

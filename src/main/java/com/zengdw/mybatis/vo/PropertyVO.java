@@ -15,14 +15,14 @@ public class PropertyVO {
     private String javaModelPackage;
     private String mapperPackage;
     private String mapperXmlPackage;
-    private Boolean mapperAnnotation;
+    private Boolean mapperAnnotation = false;
     private Boolean comment = true;
-    private Boolean mybatisPlus;
-    private Boolean example;
-    private Boolean lombok;
-    private Boolean serializable;
-    private Boolean trimString;
-    private Boolean toString;
+    private Boolean mybatisPlus = false;
+    private Boolean example = false;
+    private Boolean lombok = false;
+    private Boolean serializable = false;
+    private Boolean trimString = false;
+    private Boolean toString = false;
     private Boolean mergeFile = true;
     private List<DbTable> tableList;
 

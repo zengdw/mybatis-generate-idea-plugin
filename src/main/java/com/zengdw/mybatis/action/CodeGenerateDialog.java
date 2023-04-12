@@ -38,7 +38,7 @@ public class CodeGenerateDialog extends DialogWrapper {
         try {
             propertyUI.getData(PropertyVO.of());
 
-            GenerateCode.generate();
+            new GenerateCode().generate();
             super.doOKAction();
         } catch (Exception e) {
             Messages.showMessageDialog(e.getMessage(), "Tips", null);
