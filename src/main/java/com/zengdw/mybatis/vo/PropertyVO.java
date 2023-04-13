@@ -21,12 +21,10 @@ public class PropertyVO {
     private Boolean example = false;
     private Boolean lombok = false;
     private Boolean serializable = false;
-    private Boolean trimString = false;
-    private Boolean toString = false;
     private Boolean mergeFile = true;
     private List<DbTable> tableList;
-
     private String dbType;
+    private Boolean blob = false;
     private static PropertyVO instance;
 
     public static PropertyVO of() {
@@ -143,20 +141,12 @@ public class PropertyVO {
         this.serializable = serializable;
     }
 
-    public boolean isTrimString() {
-        return trimString;
+    public Boolean getBlob() {
+        return blob;
     }
 
-    public void setTrimString(final boolean trimString) {
-        this.trimString = trimString;
-    }
-
-    public boolean isToString() {
-        return toString;
-    }
-
-    public void setToString(final boolean toString) {
-        this.toString = toString;
+    public void setBlob(Boolean blob) {
+        this.blob = blob;
     }
 
     public boolean isMergeFile() {

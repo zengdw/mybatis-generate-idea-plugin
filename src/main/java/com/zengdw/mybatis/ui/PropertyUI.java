@@ -42,9 +42,8 @@ public class PropertyUI {
     private JCheckBox exampleQueryCheckBox;
     private JCheckBox lombokCheckBox;
     private JCheckBox serializableCheckBox;
-    private JCheckBox trimStringCheckBox;
-    private JCheckBox toStringCheckBox;
     private JCheckBox mergeFileCheckBox;
+    private JCheckBox blobBox;
     private final Project project;
     private final Module[] moduleList;
 
@@ -130,8 +129,7 @@ public class PropertyUI {
         exampleQueryCheckBox.setSelected(data.isExample());
         lombokCheckBox.setSelected(data.isLombok());
         serializableCheckBox.setSelected(data.isSerializable());
-        trimStringCheckBox.setSelected(data.isTrimString());
-        toStringCheckBox.setSelected(data.isToString());
+        blobBox.setSelected(data.getBlob());
         mergeFileCheckBox.setSelected(data.isMergeFile());
     }
 
@@ -149,8 +147,7 @@ public class PropertyUI {
         data.setExample(exampleQueryCheckBox.isSelected());
         data.setLombok(lombokCheckBox.isSelected());
         data.setSerializable(serializableCheckBox.isSelected());
-        data.setTrimString(trimStringCheckBox.isSelected());
-        data.setToString(toStringCheckBox.isSelected());
+        data.setBlob(blobBox.isSelected());
         data.setMergeFile(mergeFileCheckBox.isSelected());
     }
 

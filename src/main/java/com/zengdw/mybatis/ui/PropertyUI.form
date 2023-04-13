@@ -280,25 +280,17 @@
               <text value="Serializable"/>
             </properties>
           </component>
-          <component id="1ce47" class="javax.swing.JCheckBox" binding="trimStringCheckBox" default-binding="true">
+          <component id="deba7" class="javax.swing.JCheckBox" binding="blobBox">
             <constraints>
               <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="trimString"/>
-            </properties>
-          </component>
-          <component id="585d9" class="javax.swing.JCheckBox" binding="toStringCheckBox" default-binding="true">
-            <constraints>
-              <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="toString"/>
+              <text value="Blob"/>
             </properties>
           </component>
           <component id="e94b0" class="javax.swing.JCheckBox" binding="mergeFileCheckBox" default-binding="true">
             <constraints>
-              <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
               <selected value="true"/>
