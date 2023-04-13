@@ -26,6 +26,7 @@ public class PropertyVO {
     private Boolean mergeFile = true;
     private List<DbTable> tableList;
 
+    private String dbType;
     private static PropertyVO instance;
 
     public static PropertyVO of() {
@@ -172,5 +173,13 @@ public class PropertyVO {
 
     public void setTableList(List<DbTable> tableList) {
         this.tableList = tableList;
+    }
+
+    public String getDbType() {
+        return dbType;
+    }
+
+    public void setDbType(String dbType) {
+        this.dbType = dbType;
     }
 }

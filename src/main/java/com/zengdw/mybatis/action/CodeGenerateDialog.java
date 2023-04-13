@@ -5,6 +5,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.vfs.VirtualFileManager;
 import com.zengdw.mybatis.generate.GenerateCode;
 import com.zengdw.mybatis.ui.PropertyUI;
 import com.zengdw.mybatis.vo.PropertyVO;
@@ -39,9 +40,11 @@ public class CodeGenerateDialog extends DialogWrapper {
             propertyUI.getData(PropertyVO.of());
 
             new GenerateCode().generate();
+            VirtualFileManager.getInstance().refreshWithoutFileWatcher(true);
+            Messages.showMessageDialog("success", "Tips", null);
             super.doOKAction();
         } catch (Exception e) {
-            Messages.showMessageDialog(e.getMessage(), "Tips", null);
+            Messages.showMessageDialog(e.getMessage(), "Error", null);
         }
     }
 
@@ -50,7 +53,7 @@ public class CodeGenerateDialog extends DialogWrapper {
         try {
             super.doCancelAction();
         } catch (Exception e) {
-            Messages.showMessageDialog(e.getMessage(), "Tips", null);
+            Messages.showMessageDialog(e.getMessage(), "Error", null);
         }
     }
 

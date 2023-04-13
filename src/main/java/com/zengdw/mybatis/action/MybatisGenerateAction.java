@@ -1,10 +1,14 @@
 package com.zengdw.mybatis.action;
 
+import com.intellij.database.psi.DbDataSource;
 import com.intellij.database.psi.DbTable;
+import com.intellij.database.util.DbUtil;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.psi.PsiElement;
+import com.intellij.util.containers.JBIterable;
+import com.zengdw.mybatis.util.DbToolsUtils;
 import com.zengdw.mybatis.vo.PropertyVO;
 import org.jetbrains.annotations.NotNull;
 
@@ -23,6 +27,14 @@ public class MybatisGenerateAction extends AnAction {
         PsiElement[] selectTableElements = e.getData(LangDataKeys.PSI_ELEMENT_ARRAY);
         List<DbTable> dbTables = Stream.of(selectTableElements).filter(t -> t instanceof DbTable).map(t -> (DbTable) t).collect(Collectors.toList());
         PropertyVO.of().setTableList(dbTables);
+        JBIterable<DbDataSource> dataSources = DbUtil.getDataSources(e.getProject());
+        for (DbDataSource dataSource : dataSources) {
+            String dbType = DbToolsUtils.extractDatabaseTypeFromUrl(dataSource.getConnectionConfig().getUrl());
+            if (!"".equals(dbType.trim())) {
+                PropertyVO.of().setTableList(dbTables);
+                break;
+            }
+        }
 
         CodeGenerateDialog dialog = new CodeGenerateDialog(e);
         dialog.show();

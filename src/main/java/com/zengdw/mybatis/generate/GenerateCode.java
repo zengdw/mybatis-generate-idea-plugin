@@ -3,12 +3,12 @@ package com.zengdw.mybatis.generate;
 import com.intellij.database.psi.DbTable;
 import com.intellij.openapi.project.ProjectUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.zengdw.mybatis.override.XmlFileMergerJaxp;
 import com.zengdw.mybatis.vo.PropertyVO;
 import org.mybatis.generator.api.*;
 import org.mybatis.generator.codegen.RootClassInfo;
 import org.mybatis.generator.config.*;
 import org.mybatis.generator.internal.ObjectFactory;
-import org.mybatis.generator.internal.XmlFileMergerJaxp;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -191,7 +191,16 @@ public class GenerateCode {
 
         context.setId("simple");
         context.setTargetRuntime(property.isExample() ? "MyBatis3" : "MyBatis3Simple");
+
         context.addProperty(PropertyRegistry.CONTEXT_JAVA_FILE_ENCODING, "UTF-8");
+        context.addProperty(PropertyRegistry.CONTEXT_AUTO_DELIMIT_KEYWORDS, "true");
+        if ("Mysql".equals(property.getDbType())) {
+            context.addProperty(PropertyRegistry.CONTEXT_BEGINNING_DELIMITER, "`");
+            context.addProperty(PropertyRegistry.CONTEXT_ENDING_DELIMITER, "`");
+        } else if ("Oracle".equals(property.getDbType())) {
+            context.addProperty(PropertyRegistry.CONTEXT_BEGINNING_DELIMITER, "\"");
+            context.addProperty(PropertyRegistry.CONTEXT_ENDING_DELIMITER, "\"");
+        }
 
         if (property.isLombok()) {
             PluginConfiguration pluginConfiguration = new PluginConfiguration();
@@ -214,6 +223,7 @@ public class GenerateCode {
 
         JavaTypeResolverConfiguration javaTypeResolverConfiguration = new JavaTypeResolverConfiguration();
         javaTypeResolverConfiguration.addProperty("useJSR310Types", "true");
+        javaTypeResolverConfiguration.addProperty("forceBigDecimals", "false");
         context.setJavaTypeResolverConfiguration(javaTypeResolverConfiguration);
 
         VirtualFile virtualFile = ProjectUtil.guessModuleDir(property.getModule().getModule());
