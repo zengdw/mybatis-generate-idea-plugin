@@ -45,6 +45,7 @@ public class CodeGenerateDialog extends DialogWrapper {
             Messages.showMessageDialog("success", "Tips", null);
             super.doOKAction();
         } catch (Exception e) {
+            e.printStackTrace();
             Messages.showMessageDialog(new String(e.getMessage().getBytes(), StandardCharsets.UTF_8), "Error", null);
         }
     }

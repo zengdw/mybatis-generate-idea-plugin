@@ -87,6 +87,8 @@ public class DbToolsUtils {
             return Types.TIMESTAMP;
         } else if (fixed.contains("TIME")) {
             return Types.TIME;
+        } else if (fixed.contains("TEXT") && "MySql".equals(databaseType)) {
+            return -1;
         } else if (!fixed.contains("REAL") && !fixed.contains("NUMBER")) {
             if (fixed.contains("FLOAT")) {
                 return Types.FLOAT;
@@ -100,7 +102,7 @@ public class DbToolsUtils {
                 return Types.DECIMAL;
             } else if (fixed.contains("NUMERIC")) {
                 return Types.NUMERIC;
-            } else if (!fixed.contains("CHAR") && !fixed.contains("TEXT")) {
+            } else if (!fixed.contains("CHAR")) {
                 if (fixed.contains("BLOB")) {
                     return Types.BLOB;
                 } else if (fixed.contains("CLOB")) {

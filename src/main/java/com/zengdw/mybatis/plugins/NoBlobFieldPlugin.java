@@ -1,5 +1,6 @@
 package com.zengdw.mybatis.plugins;
 
+import com.zengdw.mybatis.vo.PropertyVO;
 import org.mybatis.generator.api.IntrospectedColumn;
 import org.mybatis.generator.api.IntrospectedTable;
 import org.mybatis.generator.api.Plugin;
@@ -115,6 +116,8 @@ public class NoBlobFieldPlugin extends PluginAdapter {
 
     @Override
     public boolean sqlMapSelectByPrimaryKeyElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
+        List<IntrospectedColumn> blobColumns = introspectedTable.getBLOBColumns();
+        if (blobColumns.size() <= 1 || !PropertyVO.of().isExample()) return true;
         List<VisitableElement> elements = element.getElements();
         elements.remove(3);
         elements.remove(3);
@@ -154,16 +157,19 @@ public class NoBlobFieldPlugin extends PluginAdapter {
 
     @Override
     public boolean sqlMapUpdateByPrimaryKeyWithoutBLOBsElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
-        return addUpdateBlobField(element, introspectedTable);
+        addUpdateBlobField(element, introspectedTable);
+        return true;
     }
 
     @Override
     public boolean sqlMapUpdateByExampleWithoutBLOBsElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
-        return addUpdateBlobField(element, introspectedTable);
+        addUpdateBlobField(element, introspectedTable);
+        return true;
     }
 
-    private boolean addUpdateBlobField(XmlElement element, IntrospectedTable introspectedTable) {
+    private void addUpdateBlobField(XmlElement element, IntrospectedTable introspectedTable) {
         List<IntrospectedColumn> blobColumns = introspectedTable.getBLOBColumns();
+        if (blobColumns.size() <= 1) return;
         StringBuilder sb = new StringBuilder("  ");
         Iterator<IntrospectedColumn> iter = blobColumns.iterator();
 
@@ -188,13 +194,6 @@ public class NoBlobFieldPlugin extends PluginAdapter {
                 OutputUtilities.xmlIndent(sb, 1);
             }
         }
-        return true;
-    }
-
-    private boolean addBlobField(XmlElement element, IntrospectedTable introspectedTable) {
-        List<IntrospectedColumn> columns = introspectedTable.getBLOBColumns();
-        buildResultMapItems(columns).forEach(element::addElement);
-        return true;
     }
 
     @Override
@@ -220,7 +219,10 @@ public class NoBlobFieldPlugin extends PluginAdapter {
 
     @Override
     public boolean sqlMapResultMapWithoutBLOBsElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
-        return addBlobField(element, introspectedTable);
+        List<IntrospectedColumn> columns = introspectedTable.getBLOBColumns();
+        if (columns.size() <= 1) return true;
+        buildResultMapItems(columns).forEach(element::addElement);
+        return true;
     }
 
     @Override
