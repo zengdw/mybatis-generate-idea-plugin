@@ -31,7 +31,7 @@ public class MybatisGenerateAction extends AnAction {
         for (DbDataSource dataSource : dataSources) {
             String dbType = DbToolsUtils.extractDatabaseTypeFromUrl(dataSource.getConnectionConfig().getUrl());
             if (!"".equals(dbType.trim())) {
-                PropertyVO.of().setTableList(dbTables);
+                PropertyVO.of().setDbType(dbType);
                 break;
             }
         }

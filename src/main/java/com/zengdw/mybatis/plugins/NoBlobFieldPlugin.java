@@ -77,8 +77,10 @@ public class NoBlobFieldPlugin extends PluginAdapter {
     @Override
     public boolean sqlMapBaseColumnListElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
         List<IntrospectedColumn> blobColumns = introspectedTable.getBLOBColumns();
-        List<TextElement> textElements = buildSelectList(blobColumns);
-        textElements.forEach(element::addElement);
+        if (blobColumns.size() > 1) {
+            List<TextElement> textElements = buildSelectList(blobColumns);
+            textElements.forEach(element::addElement);
+        }
         return true;
     }
 

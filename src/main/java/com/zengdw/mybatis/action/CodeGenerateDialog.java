@@ -12,6 +12,7 @@ import com.zengdw.mybatis.vo.PropertyVO;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @author zengd
@@ -44,7 +45,7 @@ public class CodeGenerateDialog extends DialogWrapper {
             Messages.showMessageDialog("success", "Tips", null);
             super.doOKAction();
         } catch (Exception e) {
-            Messages.showMessageDialog(e.getMessage(), "Error", null);
+            Messages.showMessageDialog(new String(e.getMessage().getBytes(), StandardCharsets.UTF_8), "Error", null);
         }
     }
 

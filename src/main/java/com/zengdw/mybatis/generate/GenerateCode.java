@@ -194,7 +194,7 @@ public class GenerateCode {
 
         context.addProperty(PropertyRegistry.CONTEXT_JAVA_FILE_ENCODING, "UTF-8");
         context.addProperty(PropertyRegistry.CONTEXT_AUTO_DELIMIT_KEYWORDS, "true");
-        if ("Mysql".equals(property.getDbType())) {
+        if ("MySql".equals(property.getDbType())) {
             context.addProperty(PropertyRegistry.CONTEXT_BEGINNING_DELIMITER, "`");
             context.addProperty(PropertyRegistry.CONTEXT_ENDING_DELIMITER, "`");
         } else if ("Oracle".equals(property.getDbType())) {
