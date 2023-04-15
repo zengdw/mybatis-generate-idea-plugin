@@ -207,7 +207,7 @@ public class GenerateCode {
             pluginConfiguration.setConfigurationType("com.zengdw.mybatis.plugins.LombokPlugin");
             context.addPluginConfiguration(pluginConfiguration);
         }
-        if (property.isExample() && !property.getBlob()) {
+        if (!property.getBlob()) {
             PluginConfiguration pluginConfiguration = new PluginConfiguration();
             pluginConfiguration.setConfigurationType("com.zengdw.mybatis.plugins.NoBlobFieldPlugin");
             context.addPluginConfiguration(pluginConfiguration);

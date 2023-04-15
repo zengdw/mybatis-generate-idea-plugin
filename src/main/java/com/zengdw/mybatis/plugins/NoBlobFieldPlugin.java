@@ -40,7 +40,9 @@ public class NoBlobFieldPlugin extends PluginAdapter {
     @Override
     public boolean modelBaseRecordClassGenerated(TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
         Plugin plugins = context.getPlugins();
-        for (IntrospectedColumn introspectedColumn : introspectedTable.getBLOBColumns()) {
+        List<IntrospectedColumn> blobColumns = introspectedTable.getBLOBColumns();
+        if (blobColumns.size() <= 1 || !PropertyVO.of().isExample()) return true;
+        for (IntrospectedColumn introspectedColumn : blobColumns) {
             Field field = getJavaBeansField(introspectedColumn, context, introspectedTable);
             if (plugins.modelFieldGenerated(field, topLevelClass, introspectedColumn, introspectedTable,
                     Plugin.ModelClassType.BASE_RECORD)) {
@@ -169,7 +171,7 @@ public class NoBlobFieldPlugin extends PluginAdapter {
 
     private void addUpdateBlobField(XmlElement element, IntrospectedTable introspectedTable) {
         List<IntrospectedColumn> blobColumns = introspectedTable.getBLOBColumns();
-        if (blobColumns.size() <= 1) return;
+        if (blobColumns.size() <= 1 || !PropertyVO.of().isExample()) return;
         StringBuilder sb = new StringBuilder("  ");
         Iterator<IntrospectedColumn> iter = blobColumns.iterator();
 
@@ -220,7 +222,7 @@ public class NoBlobFieldPlugin extends PluginAdapter {
     @Override
     public boolean sqlMapResultMapWithoutBLOBsElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
         List<IntrospectedColumn> columns = introspectedTable.getBLOBColumns();
-        if (columns.size() <= 1) return true;
+        if (columns.size() <= 1 || !PropertyVO.of().isExample()) return true;
         buildResultMapItems(columns).forEach(element::addElement);
         return true;
     }
