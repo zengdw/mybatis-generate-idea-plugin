@@ -57,6 +57,14 @@ public class PropertyUI {
             mapperPackage.setText("");
             mapperXmlPackage.setText("");
         });
+        exampleQueryCheckBox.addChangeListener(e -> {
+            if (exampleQueryCheckBox.isSelected()) {
+                blobBox.setEnabled(true);
+            } else {
+                blobBox.setEnabled(false);
+                blobBox.setSelected(false);
+            }
+        });
     }
 
     private void btnAddAction() {

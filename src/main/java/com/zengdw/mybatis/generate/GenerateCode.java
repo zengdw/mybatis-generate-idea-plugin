@@ -228,6 +228,7 @@ public class GenerateCode {
 
         JavaTypeResolverConfiguration javaTypeResolverConfiguration = new JavaTypeResolverConfiguration();
         javaTypeResolverConfiguration.addProperty("useJSR310Types", "true");
+        // 默认false，把JDBC DECIMAL 和 NUMERIC 类型解析为 Integer，为 true时把JDBC DECIMAL和NUMERIC 类型解析为java.math.BigDecimal
         javaTypeResolverConfiguration.addProperty("forceBigDecimals", "false");
         context.setJavaTypeResolverConfiguration(javaTypeResolverConfiguration);
 
@@ -237,6 +238,8 @@ public class GenerateCode {
         JavaModelGeneratorConfiguration javaModelGeneratorConfiguration = new JavaModelGeneratorConfiguration();
         javaModelGeneratorConfiguration.setTargetPackage(property.getJavaModelPackage());
         javaModelGeneratorConfiguration.setTargetProject(modulePath + property.getJavaModelPath());
+        // 从数据库返回的值被清理前后的空格
+        javaModelGeneratorConfiguration.addProperty("trimStrings", "true");
         context.setJavaModelGeneratorConfiguration(javaModelGeneratorConfiguration);
 
         SqlMapGeneratorConfiguration sqlMapGeneratorConfiguration = new SqlMapGeneratorConfiguration();
