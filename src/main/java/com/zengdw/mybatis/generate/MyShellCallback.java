@@ -137,8 +137,16 @@ public class MyShellCallback implements ShellCallback {
             //合并父类
             NodeList<ClassOrInterfaceType> extendedTypes = ((ClassOrInterfaceDeclaration) newTypeDeclaration).getExtendedTypes();
             extendedTypes.addAll(((ClassOrInterfaceDeclaration) oldTypeDeclaration).getExtendedTypes());
-            Set<ClassOrInterfaceType> extensionTypes = new HashSet<>(extendedTypes);
-            ((ClassOrInterfaceDeclaration) newTypeDeclaration).setImplementedTypes(new NodeList<>(extensionTypes));
+            NodeList<ClassOrInterfaceType> typeSet = new NodeList<>();
+            Set<String> typeNameSet = new HashSet<>();
+            extendedTypes.forEach(type -> {
+                if (!typeNameSet.contains(type.getName().asString())) {
+                    typeSet.add(type);
+                    typeNameSet.add(type.getName().asString());
+                }
+            });
+            Set<ClassOrInterfaceType> extensionTypes = new HashSet<>(typeSet);
+            ((ClassOrInterfaceDeclaration) newTypeDeclaration).setExtendedTypes(new NodeList<>(extensionTypes));
 
             //合并接口
             NodeList<ClassOrInterfaceType> implementedTypes = ((ClassOrInterfaceDeclaration) newTypeDeclaration).getImplementedTypes();
@@ -151,6 +159,11 @@ public class MyShellCallback implements ShellCallback {
             for (FieldDeclaration field : oldFields) {
                 if (!field.toString().contains(MergeConstants.NEW_ELEMENT_TAG)) {
                     newTypeDeclaration.addMember(field);
+                } else if (field.getAnnotations().size() > 0) {
+                    Optional<FieldDeclaration> newFieldByName = newTypeDeclaration.getFieldByName(field.getVariable(0).getName().getIdentifier());
+                    newFieldByName.ifPresent(field1 -> {
+                        field.getAnnotations().forEach(field1::addAnnotation);
+                    });
                 }
             }
 
