@@ -41,8 +41,7 @@ public class GenerateCode {
 
         GenerateContext context = generateContext();
         context.introspectTables(callback, warnings, null);
-        context.generateFiles(callback, generatedJavaFiles,
-                generatedXmlFiles, generatedKotlinFiles, otherGeneratedFiles, warnings);
+        context.generateFiles(callback, generatedJavaFiles, generatedXmlFiles, generatedKotlinFiles, otherGeneratedFiles, warnings);
 
         for (GeneratedXmlFile gxf : generatedXmlFiles) {
             writeGeneratedXmlFile(gxf, callback);
@@ -61,86 +60,67 @@ public class GenerateCode {
         }
     }
 
-    private void writeGeneratedFile(GeneratedFile gf, ProgressCallback callback)
-            throws Exception {
-        File targetFile;
+    private void writeGeneratedFile(GeneratedFile gf, ProgressCallback callback) throws Exception {
         String source;
-        File directory = shellCallback.getDirectory(gf
-                .getTargetProject(), gf.getTargetPackage());
-        targetFile = new File(directory, gf.getFileName());
+        File directory = shellCallback.getDirectory(gf.getTargetProject(), gf.getTargetPackage());
+        File targetFile = new File(directory, gf.getFileName());
         if (targetFile.exists()) {
             if (shellCallback.isOverwriteEnabled()) {
                 source = gf.getFormattedContent();
             } else {
                 source = gf.getFormattedContent();
-                targetFile = getUniqueFileName(directory, gf
-                        .getFileName());
+                targetFile = getUniqueFileName(directory, gf.getFileName());
             }
         } else {
             source = gf.getFormattedContent();
         }
 
         callback.checkCancel();
-        callback.startTask(getString(
-                "Progress.15", targetFile.getName())); //$NON-NLS-1$
+        callback.startTask(getString("Progress.15", targetFile.getName())); //$NON-NLS-1$
         writeFile(targetFile, source, gf.getFileEncoding());
     }
 
-    private void writeGeneratedJavaFile(GeneratedJavaFile gjf, ProgressCallback callback)
-            throws Exception {
-        File targetFile;
+    private void writeGeneratedJavaFile(GeneratedJavaFile gjf, ProgressCallback callback) throws Exception {
         String source;
-        File directory = shellCallback.getDirectory(gjf
-                .getTargetProject(), gjf.getTargetPackage());
-        targetFile = new File(directory, gjf.getFileName());
+        File directory = shellCallback.getDirectory(gjf.getTargetProject(), gjf.getTargetPackage());
+        File targetFile = new File(directory, gjf.getFileName());
         if (targetFile.exists()) {
             if (shellCallback.isMergeSupported()) {
-                source = shellCallback.mergeJavaFile(gjf
-                                .getFormattedContent(), targetFile,
-                        MergeConstants.getOldElementTags(),
-                        gjf.getFileEncoding());
+                source = shellCallback.mergeJavaFile(gjf.getFormattedContent(), targetFile, MergeConstants.getOldElementTags(), gjf.getFileEncoding());
             } else if (shellCallback.isOverwriteEnabled()) {
                 source = gjf.getFormattedContent();
             } else {
                 source = gjf.getFormattedContent();
-                targetFile = getUniqueFileName(directory, gjf
-                        .getFileName());
+                targetFile = getUniqueFileName(directory, gjf.getFileName());
             }
         } else {
             source = gjf.getFormattedContent();
         }
 
         callback.checkCancel();
-        callback.startTask(getString(
-                "Progress.15", targetFile.getName())); //$NON-NLS-1$
+        callback.startTask(getString("Progress.15", targetFile.getName())); //$NON-NLS-1$
         writeFile(targetFile, source, gjf.getFileEncoding());
     }
 
-    private void writeGeneratedXmlFile(GeneratedXmlFile gxf, ProgressCallback callback)
-            throws Exception {
-        File targetFile;
+    private void writeGeneratedXmlFile(GeneratedXmlFile gxf, ProgressCallback callback) throws Exception {
         String source;
-        File directory = shellCallback.getDirectory(gxf
-                .getTargetProject(), gxf.getTargetPackage());
-        targetFile = new File(directory, gxf.getFileName());
+        File directory = shellCallback.getDirectory(gxf.getTargetProject(), gxf.getTargetPackage());
+        File targetFile = new File(directory, gxf.getFileName());
         if (targetFile.exists()) {
             if (gxf.isMergeable()) {
-                source = XmlFileMergerJaxp.getMergedSource(gxf,
-                        targetFile);
+                source = XmlFileMergerJaxp.getMergedSource(gxf, targetFile);
             } else if (shellCallback.isOverwriteEnabled()) {
                 source = gxf.getFormattedContent();
             } else {
                 source = gxf.getFormattedContent();
-                targetFile = getUniqueFileName(directory, gxf
-                        .getFileName());
+                targetFile = getUniqueFileName(directory, gxf.getFileName());
             }
         } else {
             source = gxf.getFormattedContent();
         }
 
         callback.checkCancel();
-        callback.startTask(getString(
-                "Progress.15", targetFile.getName())); //$NON-NLS-1$
+        callback.startTask(getString("Progress.15", targetFile.getName())); //$NON-NLS-1$
         writeFile(targetFile, source, gxf.getFileEncoding());
     }
 
@@ -178,8 +158,7 @@ public class GenerateCode {
         }
 
         if (answer == null) {
-            throw new RuntimeException(getString(
-                    "RuntimeError.3", directory.getAbsolutePath())); //$NON-NLS-1$
+            throw new RuntimeException(getString("RuntimeError.3", directory.getAbsolutePath())); //$NON-NLS-1$
         }
 
         return answer;

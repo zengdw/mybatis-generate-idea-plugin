@@ -14,8 +14,12 @@ import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,7 +54,7 @@ public class XmlFileMergerJaxp {
 
         try {
             return getMergedSource(new InputSource(new StringReader(generatedXmlFile.getFormattedContent())),
-                    new InputSource(new InputStreamReader(new FileInputStream(existingFile), StandardCharsets.UTF_8)),
+                    new InputSource(new InputStreamReader(Files.newInputStream(existingFile.toPath()), StandardCharsets.UTF_8)),
                     existingFile.getName());
         } catch (IOException | SAXException | ParserConfigurationException e) {
             throw new ShellException(getString("Warning.13", //$NON-NLS-1$
@@ -159,11 +163,8 @@ public class XmlFileMergerJaxp {
     private static boolean isOldFormatNode(Node node) {
         Element element = (Element) node;
         String id = element.getAttribute("id"); //$NON-NLS-1$
-        if (id != null) {
-            return MergeConstants.idStartsWithPrefix(id);
-        }
+        return MergeConstants.idStartsWithPrefix(id);
 
-        return false;
     }
 
     private static boolean isNewFormatNode(Node node) {

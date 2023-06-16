@@ -37,16 +37,13 @@ public class GenerateContext extends Context {
     }
 
     @Override
-    public void introspectTables(ProgressCallback callback,
-                                 List<String> warnings, Set<String> fullyQualifiedTableNames)
-            throws InterruptedException {
+    public void introspectTables(ProgressCallback callback, List<String> warnings, Set<String> fullyQualifiedTableNames) throws InterruptedException {
 
         getIntrospectedTables().clear();
 
         callback.startTask(getString("Progress.0"));
 
-        JavaTypeResolver javaTypeResolver = ObjectFactory
-                .createJavaTypeResolver(this, warnings);
+        JavaTypeResolver javaTypeResolver = ObjectFactory.createJavaTypeResolver(this, warnings);
 
         Map<ActualTableName, List<IntrospectedColumn>> columns = new HashMap<>();
         for (DbTable dbTable : PropertyVO.of().getTableList()) {
@@ -67,19 +64,15 @@ public class GenerateContext extends Context {
             IntrospectedTable introspectedTable = iter.next();
 
             if (!introspectedTable.hasAnyColumns()) {
-                String warning = getString(
-                        "Warning.1", introspectedTable.getFullyQualifiedTable().toString()); //$NON-NLS-1$
+                String warning = getString("Warning.1", introspectedTable.getFullyQualifiedTable().toString()); //$NON-NLS-1$
                 warnings.add(warning);
                 iter.remove();
-            } else if (!introspectedTable.hasPrimaryKeyColumns()
-                    && !introspectedTable.hasBaseColumns()) {
-                String warning = getString(
-                        "Warning.18", introspectedTable.getFullyQualifiedTable().toString()); //$NON-NLS-1$
+            } else if (!introspectedTable.hasPrimaryKeyColumns() && !introspectedTable.hasBaseColumns()) {
+                String warning = getString("Warning.18", introspectedTable.getFullyQualifiedTable().toString()); //$NON-NLS-1$
                 warnings.add(warning);
                 iter.remove();
             } else {
-                reportIntrospectionWarnings(introspectedTable, tc,
-                        introspectedTable.getFullyQualifiedTable(), warnings);
+                reportIntrospectionWarnings(introspectedTable, tc, introspectedTable.getFullyQualifiedTable(), warnings);
             }
         }
         getIntrospectedTables().addAll(tables);
@@ -87,13 +80,10 @@ public class GenerateContext extends Context {
         callback.checkCancel();
     }
 
-    private void reportIntrospectionWarnings(
-            IntrospectedTable introspectedTable,
-            TableConfiguration tableConfiguration, FullyQualifiedTable table, List<String> warnings) {
+    private void reportIntrospectionWarnings(IntrospectedTable introspectedTable, TableConfiguration tableConfiguration, FullyQualifiedTable table, List<String> warnings) {
         // make sure that every column listed in column overrides
         // actually exists in the table
-        for (ColumnOverride columnOverride : tableConfiguration
-                .getColumnOverrides()) {
+        for (ColumnOverride columnOverride : tableConfiguration.getColumnOverrides()) {
             if (introspectedTable.getColumn(columnOverride.getColumnName()).isEmpty()) {
                 warnings.add(getString("Warning.3", //$NON-NLS-1$
                         columnOverride.getColumnName(), table.toString()));
@@ -127,35 +117,16 @@ public class GenerateContext extends Context {
         }
     }
 
-    private List<IntrospectedTable> calculateIntrospectedTables(
-            TableConfiguration tc,
-            Map<ActualTableName, List<IntrospectedColumn>> columns) {
-        boolean delimitIdentifiers = tc.isDelimitIdentifiers()
-                || stringContainsSpace(tc.getCatalog())
-                || stringContainsSpace(tc.getSchema())
-                || stringContainsSpace(tc.getTableName());
+    private List<IntrospectedTable> calculateIntrospectedTables(TableConfiguration tc, Map<ActualTableName, List<IntrospectedColumn>> columns) {
+        boolean delimitIdentifiers = tc.isDelimitIdentifiers() || stringContainsSpace(tc.getCatalog()) || stringContainsSpace(tc.getSchema()) || stringContainsSpace(tc.getTableName());
 
         List<IntrospectedTable> answer = new ArrayList<>();
 
-        for (Map.Entry<ActualTableName, List<IntrospectedColumn>> entry : columns
-                .entrySet()) {
+        for (Map.Entry<ActualTableName, List<IntrospectedColumn>> entry : columns.entrySet()) {
             ActualTableName atn = entry.getKey();
-            FullyQualifiedTable table = new FullyQualifiedTable(
-                    stringHasValue(tc.getCatalog()) ? atn.getCatalog() : null,
-                    stringHasValue(tc.getSchema()) ? atn.getSchema() : null,
-                    atn.getTableName(),
-                    tc.getDomainObjectName(),
-                    tc.getAlias(),
-                    isTrue(tc.getProperty(PropertyRegistry.TABLE_IGNORE_QUALIFIERS_AT_RUNTIME)),
-                    tc.getProperty(PropertyRegistry.TABLE_RUNTIME_CATALOG),
-                    tc.getProperty(PropertyRegistry.TABLE_RUNTIME_SCHEMA),
-                    tc.getProperty(PropertyRegistry.TABLE_RUNTIME_TABLE_NAME),
-                    delimitIdentifiers,
-                    tc.getDomainObjectRenamingRule(),
-                    this);
+            FullyQualifiedTable table = new FullyQualifiedTable(stringHasValue(tc.getCatalog()) ? atn.getCatalog() : null, stringHasValue(tc.getSchema()) ? atn.getSchema() : null, atn.getTableName(), tc.getDomainObjectName(), tc.getAlias(), isTrue(tc.getProperty(PropertyRegistry.TABLE_IGNORE_QUALIFIERS_AT_RUNTIME)), tc.getProperty(PropertyRegistry.TABLE_RUNTIME_CATALOG), tc.getProperty(PropertyRegistry.TABLE_RUNTIME_SCHEMA), tc.getProperty(PropertyRegistry.TABLE_RUNTIME_TABLE_NAME), delimitIdentifiers, tc.getDomainObjectRenamingRule(), this);
 
-            IntrospectedTable introspectedTable = ObjectFactory
-                    .createIntrospectedTable(tc, table, this);
+            IntrospectedTable introspectedTable = ObjectFactory.createIntrospectedTable(tc, table, this);
 
             for (IntrospectedColumn introspectedColumn : entry.getValue()) {
                 introspectedTable.addColumn(introspectedColumn);
@@ -189,8 +160,7 @@ public class GenerateContext extends Context {
     }
 
 
-    private void calculateIdentityColumns(TableConfiguration tc,
-                                          Map<ActualTableName, List<IntrospectedColumn>> columns) {
+    private void calculateIdentityColumns(TableConfiguration tc, Map<ActualTableName, List<IntrospectedColumn>> columns) {
         tc.getGeneratedKey().ifPresent(gk -> {
             for (Map.Entry<ActualTableName, List<IntrospectedColumn>> entry : columns.entrySet()) {
                 for (IntrospectedColumn introspectedColumn : entry.getValue()) {
@@ -216,39 +186,26 @@ public class GenerateContext extends Context {
         }
     }
 
-    private void applyColumnOverrides(TableConfiguration tc,
-                                      Map<ActualTableName, List<IntrospectedColumn>> columns) {
-        for (Map.Entry<ActualTableName, List<IntrospectedColumn>> entry : columns
-                .entrySet()) {
+    private void applyColumnOverrides(TableConfiguration tc, Map<ActualTableName, List<IntrospectedColumn>> columns) {
+        for (Map.Entry<ActualTableName, List<IntrospectedColumn>> entry : columns.entrySet()) {
             for (IntrospectedColumn introspectedColumn : entry.getValue()) {
-                ColumnOverride columnOverride = tc
-                        .getColumnOverride(introspectedColumn
-                                .getActualColumnName());
+                ColumnOverride columnOverride = tc.getColumnOverride(introspectedColumn.getActualColumnName());
 
                 if (columnOverride != null) {
-                    if (stringHasValue(columnOverride
-                            .getJavaProperty())) {
-                        introspectedColumn.setJavaProperty(columnOverride
-                                .getJavaProperty());
+                    if (stringHasValue(columnOverride.getJavaProperty())) {
+                        introspectedColumn.setJavaProperty(columnOverride.getJavaProperty());
                     }
 
-                    if (stringHasValue(columnOverride
-                            .getJavaType())) {
-                        introspectedColumn
-                                .setFullyQualifiedJavaType(new FullyQualifiedJavaType(
-                                        columnOverride.getJavaType()));
+                    if (stringHasValue(columnOverride.getJavaType())) {
+                        introspectedColumn.setFullyQualifiedJavaType(new FullyQualifiedJavaType(columnOverride.getJavaType()));
                     }
 
-                    if (stringHasValue(columnOverride
-                            .getJdbcType())) {
-                        introspectedColumn.setJdbcTypeName(columnOverride
-                                .getJdbcType());
+                    if (stringHasValue(columnOverride.getJdbcType())) {
+                        introspectedColumn.setJdbcTypeName(columnOverride.getJdbcType());
                     }
 
-                    if (stringHasValue(columnOverride
-                            .getTypeHandler())) {
-                        introspectedColumn.setTypeHandler(columnOverride
-                                .getTypeHandler());
+                    if (stringHasValue(columnOverride.getTypeHandler())) {
+                        introspectedColumn.setTypeHandler(columnOverride.getTypeHandler());
                     }
 
                     if (columnOverride.isColumnNameDelimited()) {
@@ -257,8 +214,7 @@ public class GenerateContext extends Context {
 
                     introspectedColumn.setGeneratedAlways(columnOverride.isGeneratedAlways());
 
-                    introspectedColumn.setProperties(columnOverride
-                            .getProperties());
+                    introspectedColumn.setProperties(columnOverride.getProperties());
 
                 }
             }
@@ -268,8 +224,7 @@ public class GenerateContext extends Context {
     private void getColumns(DbTable dbTable, Map<ActualTableName, List<IntrospectedColumn>> answer) {
         JBIterable<? extends DasColumn> tableColumns = DasUtil.getColumns(dbTable);
         for (DasColumn column : tableColumns) {
-            IntrospectedColumn introspectedColumn = ObjectFactory
-                    .createIntrospectedColumn(this);
+            IntrospectedColumn introspectedColumn = ObjectFactory.createIntrospectedColumn(this);
 //            introspectedColumn.setTableAlias(tc.getAlias());
             introspectedColumn.setJdbcType(DbToolsUtils.convertTypeNameToJdbcType(column.getDataType().typeName, DbToolsUtils.extractDatabaseTypeFromUrl(dbTable)));
             introspectedColumn.setActualTypeName(column.getDataType().typeName);
@@ -292,99 +247,71 @@ public class GenerateContext extends Context {
         }
     }
 
-    private void removeIgnoredColumns(TableConfiguration tc,
-                                      Map<ActualTableName, List<IntrospectedColumn>> columns) {
-        for (Map.Entry<ActualTableName, List<IntrospectedColumn>> entry : columns
-                .entrySet()) {
-            entry.getValue().removeIf(introspectedColumn -> tc
-                    .isColumnIgnored(introspectedColumn
-                            .getActualColumnName()));
+    private void removeIgnoredColumns(TableConfiguration tc, Map<ActualTableName, List<IntrospectedColumn>> columns) {
+        for (Map.Entry<ActualTableName, List<IntrospectedColumn>> entry : columns.entrySet()) {
+            entry.getValue().removeIf(introspectedColumn -> tc.isColumnIgnored(introspectedColumn.getActualColumnName()));
         }
     }
 
-    private void calculateExtraColumnInformation(TableConfiguration tc,
-                                                 Map<ActualTableName, List<IntrospectedColumn>> columns,
-                                                 JavaTypeResolver javaTypeResolver,
-                                                 List<String> warnings) {
+    private void calculateExtraColumnInformation(TableConfiguration tc, Map<ActualTableName, List<IntrospectedColumn>> columns, JavaTypeResolver javaTypeResolver, List<String> warnings) {
         StringBuilder sb = new StringBuilder();
         Pattern pattern = null;
         String replaceString = null;
         if (tc.getColumnRenamingRule() != null) {
-            pattern = Pattern.compile(tc.getColumnRenamingRule()
-                    .getSearchString());
+            pattern = Pattern.compile(tc.getColumnRenamingRule().getSearchString());
             replaceString = tc.getColumnRenamingRule().getReplaceString();
             replaceString = replaceString == null ? "" : replaceString; //$NON-NLS-1$
         }
 
-        for (Map.Entry<ActualTableName, List<IntrospectedColumn>> entry : columns
-                .entrySet()) {
+        for (Map.Entry<ActualTableName, List<IntrospectedColumn>> entry : columns.entrySet()) {
             for (IntrospectedColumn introspectedColumn : entry.getValue()) {
                 String calculatedColumnName;
                 if (pattern == null) {
-                    calculatedColumnName = introspectedColumn
-                            .getActualColumnName();
+                    calculatedColumnName = introspectedColumn.getActualColumnName();
                 } else {
-                    Matcher matcher = pattern.matcher(introspectedColumn
-                            .getActualColumnName());
+                    Matcher matcher = pattern.matcher(introspectedColumn.getActualColumnName());
                     calculatedColumnName = matcher.replaceAll(replaceString);
                 }
 
-                if (isTrue(tc
-                        .getProperty(PropertyRegistry.TABLE_USE_ACTUAL_COLUMN_NAMES))) {
-                    introspectedColumn.setJavaProperty(
-                            JavaBeansUtil.getValidPropertyName(calculatedColumnName));
-                } else if (isTrue(tc
-                        .getProperty(PropertyRegistry.TABLE_USE_COMPOUND_PROPERTY_NAMES))) {
+                if (isTrue(tc.getProperty(PropertyRegistry.TABLE_USE_ACTUAL_COLUMN_NAMES))) {
+                    introspectedColumn.setJavaProperty(JavaBeansUtil.getValidPropertyName(calculatedColumnName));
+                } else if (isTrue(tc.getProperty(PropertyRegistry.TABLE_USE_COMPOUND_PROPERTY_NAMES))) {
                     sb.setLength(0);
                     sb.append(calculatedColumnName);
                     sb.append('_');
-                    sb.append(JavaBeansUtil.getCamelCaseString(
-                            introspectedColumn.getRemarks(), true));
-                    introspectedColumn.setJavaProperty(
-                            JavaBeansUtil.getValidPropertyName(sb.toString()));
+                    sb.append(JavaBeansUtil.getCamelCaseString(introspectedColumn.getRemarks(), true));
+                    introspectedColumn.setJavaProperty(JavaBeansUtil.getValidPropertyName(sb.toString()));
                 } else {
-                    introspectedColumn.setJavaProperty(
-                            JavaBeansUtil.getCamelCaseString(calculatedColumnName, false));
+                    introspectedColumn.setJavaProperty(JavaBeansUtil.getCamelCaseString(calculatedColumnName, false));
                 }
 
-                FullyQualifiedJavaType fullyQualifiedJavaType = javaTypeResolver
-                        .calculateJavaType(introspectedColumn);
+                FullyQualifiedJavaType fullyQualifiedJavaType = javaTypeResolver.calculateJavaType(introspectedColumn);
 
                 if (fullyQualifiedJavaType != null) {
-                    introspectedColumn
-                            .setFullyQualifiedJavaType(fullyQualifiedJavaType);
-                    introspectedColumn.setJdbcTypeName(javaTypeResolver
-                            .calculateJdbcTypeName(introspectedColumn));
+                    introspectedColumn.setFullyQualifiedJavaType(fullyQualifiedJavaType);
+                    introspectedColumn.setJdbcTypeName(javaTypeResolver.calculateJdbcTypeName(introspectedColumn));
                 } else {
                     // type cannot be resolved. Check for ignored or overridden
                     boolean warn = !tc.isColumnIgnored(introspectedColumn.getActualColumnName());
 
-                    ColumnOverride co = tc.getColumnOverride(introspectedColumn
-                            .getActualColumnName());
-                    if (co != null
-                            && stringHasValue(co.getJavaType())) {
+                    ColumnOverride co = tc.getColumnOverride(introspectedColumn.getActualColumnName());
+                    if (co != null && stringHasValue(co.getJavaType())) {
                         warn = false;
                     }
 
                     // if the type is not supported, then we'll report a warning
                     if (warn) {
-                        introspectedColumn
-                                .setFullyQualifiedJavaType(FullyQualifiedJavaType
-                                        .getObjectInstance());
+                        introspectedColumn.setFullyQualifiedJavaType(FullyQualifiedJavaType.getObjectInstance());
                         introspectedColumn.setJdbcTypeName("OTHER"); //$NON-NLS-1$
 
                         String warning = getString("Warning.14", //$NON-NLS-1$
-                                Integer.toString(introspectedColumn.getJdbcType()),
-                                entry.getKey().toString(),
-                                introspectedColumn.getActualColumnName());
+                                Integer.toString(introspectedColumn.getJdbcType()), entry.getKey().toString(), introspectedColumn.getActualColumnName());
 
                         warnings.add(warning);
                     }
                 }
 
-                if (autoDelimitKeywords()
-                        && SqlReservedWords.containsWord(introspectedColumn
-                        .getActualColumnName())) {
+                if (autoDelimitKeywords() && SqlReservedWords.containsWord(introspectedColumn.getActualColumnName())) {
                     introspectedColumn.setColumnNameDelimited(true);
                 }
 

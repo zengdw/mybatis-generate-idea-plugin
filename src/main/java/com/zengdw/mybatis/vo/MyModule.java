@@ -3,6 +3,8 @@ package com.zengdw.mybatis.vo;
 import com.intellij.openapi.module.Module;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 /**
  * @author zengd
  * @version 1.0
@@ -23,6 +25,19 @@ public class MyModule {
 
     public Module getModule() {
         return module;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof MyModule)) return false;
+        MyModule myModule = (MyModule) o;
+        return Objects.equals(name, myModule.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
     }
 
     @Override
