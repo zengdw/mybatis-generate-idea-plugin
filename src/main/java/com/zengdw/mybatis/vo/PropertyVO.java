@@ -17,7 +17,7 @@ public class PropertyVO {
     private String mapperXmlPackage;
     private Boolean mapperAnnotation = false;
     private Boolean comment = true;
-    private Boolean mybatisPlus = false;
+    private Boolean java8Date = false;
     private Boolean example = false;
     private Boolean lombok = false;
     private Boolean serializable = false;
@@ -109,12 +109,12 @@ public class PropertyVO {
         this.comment = comment;
     }
 
-    public boolean isMybatisPlus() {
-        return mybatisPlus;
+    public boolean getJava8Date() {
+        return java8Date;
     }
 
-    public void setMybatisPlus(final boolean mybatisPlus) {
-        this.mybatisPlus = mybatisPlus;
+    public void setJava8Date(final boolean java8Date) {
+        this.java8Date = java8Date;
     }
 
     public boolean isExample() {

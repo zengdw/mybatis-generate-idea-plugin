@@ -20,6 +20,7 @@ import java.util.Properties;
  * @version 1.0
  * @date 2022/4/6 14:28
  */
+@SuppressWarnings("unused")
 public class CommentGenerator implements org.mybatis.generator.api.CommentGenerator {
 
     @Override

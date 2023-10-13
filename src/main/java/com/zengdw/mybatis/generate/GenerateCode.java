@@ -5,6 +5,7 @@ import com.intellij.openapi.project.ProjectUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.zengdw.mybatis.override.XmlFileMergerJaxp;
 import com.zengdw.mybatis.vo.PropertyVO;
+import org.jetbrains.annotations.NotNull;
 import org.mybatis.generator.api.*;
 import org.mybatis.generator.codegen.RootClassInfo;
 import org.mybatis.generator.config.*;
@@ -197,6 +198,10 @@ public class GenerateCode {
             pluginConfiguration.addProperty("suppressJavaInterface", "false");
             context.addPluginConfiguration(pluginConfiguration);
         }
+        PluginConfiguration mapperSelectivePluginConfiguration = new PluginConfiguration();
+        mapperSelectivePluginConfiguration.setConfigurationType("com.zengdw.mybatis.plugins.MapperSelectivePlugin");
+        context.addPluginConfiguration(mapperSelectivePluginConfiguration);
+
         PluginConfiguration pluginConfiguration = new PluginConfiguration();
         pluginConfiguration.setConfigurationType("com.zengdw.mybatis.plugins.EmptyStrPlugin");
         context.addPluginConfiguration(pluginConfiguration);
@@ -205,10 +210,7 @@ public class GenerateCode {
         commentGeneratorConfiguration.setConfigurationType("com.zengdw.mybatis.generate.CommentGenerator");
         context.setCommentGeneratorConfiguration(commentGeneratorConfiguration);
 
-        JavaTypeResolverConfiguration javaTypeResolverConfiguration = new JavaTypeResolverConfiguration();
-        javaTypeResolverConfiguration.addProperty("useJSR310Types", "true");
-        // 默认false，把JDBC DECIMAL 和 NUMERIC 类型解析为 Integer，为 true时把JDBC DECIMAL和NUMERIC 类型解析为java.math.BigDecimal
-        javaTypeResolverConfiguration.addProperty("forceBigDecimals", "false");
+        JavaTypeResolverConfiguration javaTypeResolverConfiguration = getJavaTypeResolverConfiguration();
         context.setJavaTypeResolverConfiguration(javaTypeResolverConfiguration);
 
         VirtualFile virtualFile = ProjectUtil.guessModuleDir(property.getModule().getModule());
@@ -238,5 +240,32 @@ public class GenerateCode {
         }
         context.addTableConfiguration(tc);
         return context;
+    }
+
+    @NotNull
+    private static JavaTypeResolverConfiguration getJavaTypeResolverConfiguration() {
+        JavaTypeResolverConfiguration javaTypeResolverConfiguration = new JavaTypeResolverConfiguration();
+        /*
+            useJSR310Types:
+            true	JDBC Type	Resolved Java Type
+                    DATE	java.time.LocalDate
+                    TIME	java.time.LocalTime
+                    TIMESTAMP	java.time.LocalDateTime
+            false	使用java8时间类型
+         */
+        boolean java8Date = PropertyVO.of().getJava8Date();
+        javaTypeResolverConfiguration.addProperty("useJSR310Types", java8Date ? "false" : "true");
+        /*
+            forceBigDecimals:
+            false	这是默认值
+                    当属性为 false 或未指定时，缺省 Java 类型解析器将尝试通过替换整型类型（如果可能）使 JDBC 十进制和数字类型更易于使用。替换规则如下：
+                    如果小数位数大于零，或者长度大于 18，则将使用 java.math.BigDecimal 类型。
+                    如果小数位数为零，并且长度为 10 到 18，则 Java 类型解析器将替换 java.lang.Long。
+                    如果小数位数为零，并且长度为 5 到 9，则 Java 类型解析程序将替换 java.lang.Integer。
+                    如果小数位数为零，并且长度小于 5，则 Java 类型解析器将替换 java.lang.Short。
+            true	当该属性为 true 时，如果数据库列的类型为 DECIMAL 或 NUMERIC，则 Java 类型解析程序将始终使用 java.math.BigDecimal 。
+         */
+        javaTypeResolverConfiguration.addProperty("forceBigDecimals", "false");
+        return javaTypeResolverConfiguration;
     }
 }

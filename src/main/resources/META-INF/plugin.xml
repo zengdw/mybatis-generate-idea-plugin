@@ -1,47 +1,58 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
-  <!-- Unique identifier of the plugin. It should be FQN. It cannot be changed between the plugin versions. -->
-  <id>com.zengdw.mybatis.mybatis-generate-idea-plugin</id>
+    <!-- Unique identifier of the plugin. It should be FQN. It cannot be changed between the plugin versions. -->
+    <id>com.zengdw.mybatis.mybatis-generate-idea-plugin</id>
 
-  <!-- Public plugin name should be written in Title Case.
-       Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-name -->
-  <name>Mybatis-Generate</name>
+    <!-- Public plugin name should be written in Title Case.
+         Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-name -->
+    <name>Mybatis-Generate</name>
 
-  <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
-  <vendor email="309606298@qq.com" url="https://blog.zengdw.com">zengdw</vendor>
+    <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
+    <vendor email="309606298@qq.com" url="https://blog.zengdw.com">zengdw</vendor>
 
-  <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
-       Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
-       Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
-  <description><![CDATA[
-    <h1>Mybatis Generate idea plugin</h1>
-    mybatis automatically generates entities, mapper, and xml. This is only an initial release and supports the following features:
-    <ol>
-      <li>lombok plugin annotations</li>
-      <li>example query</li>
-      <li>Generated code merge</li>
-      <li>blob large fields are generated in the same class</li>
-    </ol>
-  ]]></description>
+    <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
+         Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
+         Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
+    <description>
+        <![CDATA[
+            <h1>Mybatis Generate idea plugin</h1>
+            mybatis automatically generates entities, mapper, and xml. This is only an initial release and supports the following features:
+            <ol>
+              <li>lombok plugin annotations</li>
+              <li>example query</li>
+              <li>Generated code merge</li>
+              <li>blob large fields are generated in the same class</li>
+            </ol>
+        ]]>
+    </description>
 
-  <!-- Product and plugin compatibility requirements.
-       Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
-  <depends>com.intellij.modules.platform</depends>
-  <!--文件类型，词法分析器，解析器，高亮显示，引用，代码完成，查找，重命名，格式化程序，代码导航-->
-  <depends>com.intellij.modules.lang</depends>
-  <!--数据库工具和SQL语言PSI模型，检查，完成，重构，查询-->
-  <depends>com.intellij.database</depends>
+    <change-notes>
+        <![CDATA[
+            <h2>New Features</h2>
+            <ul>
+              <li>支持IDEA最新版本</li>
+            </ul>
+        ]]>
+    </change-notes>
 
-  <!-- Extension points defined by the plugin.
-       Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html
-       扩展点配置：defaultExtensionNs="com.intellij" 表示扩展了idea平台的核心功能
-       defaultExtensionNs="com.intellij.database" 表示扩展了database插件的功能(扩展的插件必须配置在depends中)-->
-  <extensions defaultExtensionNs="com.intellij">
+    <!-- Product and plugin compatibility requirements.
+         Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
+    <depends>com.intellij.modules.platform</depends>
+    <!--文件类型，词法分析器，解析器，高亮显示，引用，代码完成，查找，重命名，格式化程序，代码导航-->
+    <depends>com.intellij.modules.lang</depends>
+    <!--数据库工具和SQL语言PSI模型，检查，完成，重构，查询-->
+    <depends>com.intellij.database</depends>
 
-  </extensions>
-  <actions>
-    <action id="Mybatis-Generate" class="com.zengdw.mybatis.action.MybatisGenerateAction" text="Mybatis-Generate">
-      <add-to-group group-id="DatabaseViewPopupMenu" anchor="first"/>
-    </action>
-  </actions>
+    <!-- Extension points defined by the plugin.
+         Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html
+         扩展点配置：defaultExtensionNs="com.intellij" 表示扩展了idea平台的核心功能
+         defaultExtensionNs="com.intellij.database" 表示扩展了database插件的功能(扩展的插件必须配置在depends中)-->
+    <extensions defaultExtensionNs="com.intellij">
+
+    </extensions>
+    <actions>
+        <action id="Mybatis-Generate" class="com.zengdw.mybatis.action.MybatisGenerateAction" text="Mybatis-Generate">
+            <add-to-group group-id="DatabaseViewPopupMenu" anchor="first"/>
+        </action>
+    </actions>
 </idea-plugin>

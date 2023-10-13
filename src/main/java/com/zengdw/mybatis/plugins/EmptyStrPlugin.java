@@ -15,6 +15,7 @@ import java.util.List;
  * @version 1.0
  * @date 2023/3/8 13:52
  */
+@SuppressWarnings("unused")
 public class EmptyStrPlugin extends PluginAdapter {
     @Override
     public boolean validate(List<String> warnings) {
@@ -23,9 +24,16 @@ public class EmptyStrPlugin extends PluginAdapter {
 
     @Override
     public boolean sqlMapInsertSelectiveElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
+        addEmptyStrJudgmentForInsert(element, introspectedTable);
+        return true;
+    }
+
+    private static void addEmptyStrJudgmentForInsert(XmlElement element, IntrospectedTable introspectedTable) {
         List<IntrospectedColumn> allColumns = introspectedTable.getAllColumns();
         List<VisitableElement> elements = element.getElements();
-        XmlElement xmlElement = (XmlElement) elements.get(2);
+        if (!(elements.get(2) instanceof XmlElement xmlElement)) {
+            return;
+        }
         XmlElement xmlElement1 = (XmlElement) elements.get(3);
         for (int i = 0; i < xmlElement.getElements().size(); i++) {
             XmlElement xmlEl = (XmlElement) xmlElement.getElements().get(i);
@@ -50,6 +58,11 @@ public class EmptyStrPlugin extends PluginAdapter {
                 }
             }
         }
+    }
+
+    @Override
+    public boolean sqlMapInsertElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
+        addEmptyStrJudgmentForInsert(element, introspectedTable);
         return true;
     }
 
@@ -60,17 +73,13 @@ public class EmptyStrPlugin extends PluginAdapter {
     }
 
     @Override
-    public boolean sqlMapUpdateByExampleWithoutBLOBsElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
-        return super.sqlMapUpdateByExampleWithoutBLOBsElementGenerated(element, introspectedTable);
+    public boolean sqlMapUpdateByPrimaryKeySelectiveElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
+        addEmptyStrJudgment(element, introspectedTable);
+        return true;
     }
 
     @Override
     public boolean sqlMapUpdateByPrimaryKeyWithoutBLOBsElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
-        return super.sqlMapUpdateByPrimaryKeyWithoutBLOBsElementGenerated(element, introspectedTable);
-    }
-
-    @Override
-    public boolean sqlMapUpdateByPrimaryKeySelectiveElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
         addEmptyStrJudgment(element, introspectedTable);
         return true;
     }
@@ -78,7 +87,10 @@ public class EmptyStrPlugin extends PluginAdapter {
     private static void addEmptyStrJudgment(XmlElement element, IntrospectedTable introspectedTable) {
         List<IntrospectedColumn> allColumns = introspectedTable.getAllColumns();
 
-        XmlElement element1 = (XmlElement) element.getElements().get(2);
+        if (!(element.getElements().get(2) instanceof XmlElement element1)) {
+            return;
+        }
+
         for (int i = 0; i < element1.getElements().size(); i++) {
             XmlElement xmlEl = (XmlElement) element1.getElements().get(i);
             TextElement text = (TextElement) xmlEl.getElements().get(0);

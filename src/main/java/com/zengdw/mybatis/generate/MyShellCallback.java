@@ -117,7 +117,7 @@ public class MyShellCallback implements ShellCallback {
 
         NodeList<TypeDeclaration<?>> newTypes = newCompilationUnit.getTypes();
         NodeList<TypeDeclaration<?>> oldTypes = oldCompilationUnit.getTypes();
-        if (oldTypes.size() == 0) {
+        if (oldTypes.isEmpty()) {
             return newCompilationUnit;
         }
 
@@ -159,11 +159,9 @@ public class MyShellCallback implements ShellCallback {
             for (FieldDeclaration field : oldFields) {
                 if (!field.toString().contains(MergeConstants.NEW_ELEMENT_TAG)) {
                     newTypeDeclaration.addMember(field);
-                } else if (field.getAnnotations().size() > 0) {
+                } else if (!field.getAnnotations().isEmpty()) {
                     Optional<FieldDeclaration> newFieldByName = newTypeDeclaration.getFieldByName(field.getVariable(0).getName().getIdentifier());
-                    newFieldByName.ifPresent(field1 -> {
-                        field.getAnnotations().forEach(field1::addAnnotation);
-                    });
+                    newFieldByName.ifPresent(field1 -> field.getAnnotations().forEach(field1::addAnnotation));
                 }
             }
 

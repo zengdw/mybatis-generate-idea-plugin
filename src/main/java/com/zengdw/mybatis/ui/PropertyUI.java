@@ -38,7 +38,7 @@ public class PropertyUI {
     private JTextField javaModelPackage;
     private JCheckBox mapperAnnotationCheckBox;
     private JCheckBox generateCommentCheckBox;
-    private JCheckBox mybatisPlusCheckBox;
+    private JCheckBox java8Date;
     private JCheckBox exampleQueryCheckBox;
     private JCheckBox lombokCheckBox;
     private JCheckBox serializableCheckBox;
@@ -133,7 +133,7 @@ public class PropertyUI {
         mapperXmlPackage.setText(data.getMapperXmlPackage());
         mapperAnnotationCheckBox.setSelected(data.isMapperAnnotation());
         generateCommentCheckBox.setSelected(data.isComment());
-        mybatisPlusCheckBox.setSelected(data.isMybatisPlus());
+        java8Date.setSelected(data.getJava8Date());
         exampleQueryCheckBox.setSelected(data.isExample());
         lombokCheckBox.setSelected(data.isLombok());
         serializableCheckBox.setSelected(data.isSerializable());
@@ -151,7 +151,7 @@ public class PropertyUI {
         data.setMapperXmlPackage(isEmpty(mapperXmlPackage.getText()));
         data.setMapperAnnotation(mapperAnnotationCheckBox.isSelected());
         data.setComment(generateCommentCheckBox.isSelected());
-        data.setMybatisPlus(mybatisPlusCheckBox.isSelected());
+        data.setJava8Date(java8Date.isSelected());
         data.setExample(exampleQueryCheckBox.isSelected());
         data.setLombok(lombokCheckBox.isSelected());
         data.setSerializable(serializableCheckBox.isSelected());

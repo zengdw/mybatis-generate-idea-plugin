@@ -247,12 +247,12 @@
               <text value="generateComment"/>
             </properties>
           </component>
-          <component id="d5f6a" class="javax.swing.JCheckBox" binding="mybatisPlusCheckBox" default-binding="true">
+          <component id="d5f6a" class="javax.swing.JCheckBox" binding="java8Date">
             <constraints>
               <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="mybatisPlus"/>
+              <text value="java8 Date"/>
             </properties>
           </component>
           <component id="b3701" class="javax.swing.JCheckBox" binding="exampleQueryCheckBox" default-binding="true">

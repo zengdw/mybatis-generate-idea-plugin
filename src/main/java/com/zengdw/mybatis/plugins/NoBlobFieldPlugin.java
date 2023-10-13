@@ -25,7 +25,7 @@ import static org.mybatis.generator.internal.util.StringUtility.stringHasValue;
  * @version 1.0
  * @date 2023/4/7 14:40
  */
-@SuppressWarnings("SpellCheckingInspection")
+@SuppressWarnings("unused")
 public class NoBlobFieldPlugin extends PluginAdapter {
     @Override
     public boolean validate(List<String> warnings) {
@@ -80,7 +80,7 @@ public class NoBlobFieldPlugin extends PluginAdapter {
     @Override
     public boolean sqlMapBaseColumnListElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
         List<IntrospectedColumn> blobColumns = introspectedTable.getBLOBColumns();
-        if (blobColumns.size() > 0) {
+        if (!blobColumns.isEmpty()) {
             List<TextElement> textElements = buildSelectList(blobColumns);
             textElements.forEach(element::addElement);
         }
@@ -109,7 +109,7 @@ public class NoBlobFieldPlugin extends PluginAdapter {
             }
         }
 
-        if (sb.length() > 0) {
+        if (!sb.isEmpty()) {
             answer.add(new TextElement(sb.toString()));
         }
 
@@ -119,7 +119,7 @@ public class NoBlobFieldPlugin extends PluginAdapter {
     @Override
     public boolean sqlMapSelectByPrimaryKeyElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
         List<IntrospectedColumn> blobColumns = introspectedTable.getBLOBColumns();
-        if (blobColumns.size() < 1 || !PropertyVO.of().isExample()) return true;
+        if (blobColumns.isEmpty() || !PropertyVO.of().isExample()) return true;
         List<VisitableElement> elements = element.getElements();
         elements.remove(3);
         elements.remove(3);
@@ -146,7 +146,7 @@ public class NoBlobFieldPlugin extends PluginAdapter {
     }
 
     private void updateParameterType(XmlElement element, IntrospectedTable introspectedTable) {
-        if (introspectedTable.getBLOBColumns().size() < 1) return;
+        if (introspectedTable.getBLOBColumns().isEmpty()) return;
         FullyQualifiedJavaType fullyQualifiedJavaType = new FullyQualifiedJavaType(introspectedTable.getBaseRecordType());
         Attribute attribute = new Attribute("parameterType", fullyQualifiedJavaType.getFullyQualifiedName());
         element.getAttributes().set(1, attribute);
@@ -171,7 +171,7 @@ public class NoBlobFieldPlugin extends PluginAdapter {
 
     private void addUpdateBlobField(XmlElement element, IntrospectedTable introspectedTable) {
         List<IntrospectedColumn> blobColumns = introspectedTable.getBLOBColumns();
-        if (blobColumns.size() < 1 || !PropertyVO.of().isExample()) return;
+        if (blobColumns.isEmpty() || !PropertyVO.of().isExample()) return;
         StringBuilder sb = new StringBuilder("  ");
         Iterator<IntrospectedColumn> iter = blobColumns.iterator();
 
@@ -222,7 +222,7 @@ public class NoBlobFieldPlugin extends PluginAdapter {
     @Override
     public boolean sqlMapResultMapWithoutBLOBsElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
         List<IntrospectedColumn> columns = introspectedTable.getBLOBColumns();
-        if (columns.size() < 1 || !PropertyVO.of().isExample()) return true;
+        if (columns.isEmpty() || !PropertyVO.of().isExample()) return true;
         buildResultMapItems(columns).forEach(element::addElement);
         return true;
     }
@@ -234,7 +234,7 @@ public class NoBlobFieldPlugin extends PluginAdapter {
 
     @Override
     public boolean clientSelectByPrimaryKeyMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable) {
-        if (introspectedTable.getBLOBColumns().size() < 1) return true;
+        if (introspectedTable.getBLOBColumns().isEmpty()) return true;
         FullyQualifiedJavaType returnType = new FullyQualifiedJavaType(introspectedTable.getBaseRecordType());
         method.setReturnType(returnType);
         Set<FullyQualifiedJavaType> importedTypes = new TreeSet<>();
@@ -246,7 +246,7 @@ public class NoBlobFieldPlugin extends PluginAdapter {
 
     @Override
     public boolean clientUpdateByExampleSelectiveMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable) {
-        if (introspectedTable.getBLOBColumns().size() < 1) return true;
+        if (introspectedTable.getBLOBColumns().isEmpty()) return true;
         List<Parameter> parameters = method.getParameters();
         parameters.remove(0);
         FullyQualifiedJavaType parameterType = new FullyQualifiedJavaType(introspectedTable.getBaseRecordType());
@@ -263,7 +263,7 @@ public class NoBlobFieldPlugin extends PluginAdapter {
 
     @Override
     public boolean clientUpdateByPrimaryKeySelectiveMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable) {
-        if (introspectedTable.getBLOBColumns().size() < 1) return true;
+        if (introspectedTable.getBLOBColumns().isEmpty()) return true;
         Set<FullyQualifiedJavaType> importedTypes = new TreeSet<>();
         List<Parameter> parameters = method.getParameters();
         parameters.remove(0);
@@ -276,7 +276,7 @@ public class NoBlobFieldPlugin extends PluginAdapter {
     }
 
     private static boolean replaceInsertParameter(Method method, Interface interfaze, IntrospectedTable introspectedTable) {
-        if (introspectedTable.getBLOBColumns().size() < 1) return true;
+        if (introspectedTable.getBLOBColumns().isEmpty()) return true;
         FullyQualifiedJavaType type = new FullyQualifiedJavaType(introspectedTable.getBaseRecordType());
         method.getParameters().remove(0);
         method.addParameter(new Parameter(type, "row"));

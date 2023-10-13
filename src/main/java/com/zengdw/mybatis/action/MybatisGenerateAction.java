@@ -30,7 +30,7 @@ public class MybatisGenerateAction extends AnAction {
         JBIterable<DbDataSource> dataSources = DbUtil.getDataSources(e.getProject());
         for (DbDataSource dataSource : dataSources) {
             String dbType = DbToolsUtils.extractDatabaseTypeFromUrl(dataSource.getConnectionConfig().getUrl());
-            if (!"".equals(dbType.trim())) {
+            if (!dbType.trim().isEmpty()) {
                 PropertyVO.of().setDbType(dbType);
                 break;
             }

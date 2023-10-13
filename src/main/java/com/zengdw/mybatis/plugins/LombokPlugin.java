@@ -15,6 +15,7 @@ import java.util.List;
  * @version 1.0
  * @date 2022/4/6 16:24
  */
+@SuppressWarnings("unused")
 public class LombokPlugin extends PluginAdapter {
     @Override
     public boolean validate(List<String> warnings) {
