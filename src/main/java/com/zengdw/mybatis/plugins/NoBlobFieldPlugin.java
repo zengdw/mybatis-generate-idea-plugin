@@ -109,7 +109,7 @@ public class NoBlobFieldPlugin extends PluginAdapter {
             }
         }
 
-        if (!sb.isEmpty()) {
+        if (sb.length() > 0) {
             answer.add(new TextElement(sb.toString()));
         }
 
