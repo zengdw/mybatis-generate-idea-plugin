@@ -17,7 +17,7 @@ public class PropertyVO {
     private String mapperXmlPackage;
     private Boolean mapperAnnotation = false;
     private Boolean comment = true;
-    private Boolean java8Date = false;
+    private Boolean java8Date = true;
     private Boolean example = false;
     private Boolean lombok = false;
     private Boolean serializable = false;

@@ -14,7 +14,6 @@ repositories {
 
 dependencies {
     implementation("org.mybatis.generator:mybatis-generator-core:1.4.2")
-    implementation("org.freemarker:freemarker:2.3.32")
     implementation("com.github.javaparser:javaparser-symbol-solver-core:3.24.4")
 
 }
@@ -31,8 +30,9 @@ intellij {
 tasks {
     // Set the JVM compatibility versions
     withType<JavaCompile> {
-        sourceCompatibility = "17"
-        targetCompatibility = "17"
+        sourceCompatibility = "1.8"
+        targetCompatibility = "1.8"
+        options.encoding = "UTF-8"
     }
 
     patchPluginXml {

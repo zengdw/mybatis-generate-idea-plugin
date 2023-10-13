@@ -255,7 +255,7 @@ public class GenerateCode {
             false	使用java8时间类型
          */
         boolean java8Date = PropertyVO.of().getJava8Date();
-        javaTypeResolverConfiguration.addProperty("useJSR310Types", java8Date ? "false" : "true");
+        javaTypeResolverConfiguration.addProperty("useJSR310Types", String.valueOf(java8Date));
         /*
             forceBigDecimals:
             false	这是默认值

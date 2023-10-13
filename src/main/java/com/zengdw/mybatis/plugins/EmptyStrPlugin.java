@@ -31,9 +31,10 @@ public class EmptyStrPlugin extends PluginAdapter {
     private static void addEmptyStrJudgmentForInsert(XmlElement element, IntrospectedTable introspectedTable) {
         List<IntrospectedColumn> allColumns = introspectedTable.getAllColumns();
         List<VisitableElement> elements = element.getElements();
-        if (!(elements.get(2) instanceof XmlElement xmlElement)) {
+        if (!(elements.get(2) instanceof XmlElement)) {
             return;
         }
+        XmlElement xmlElement = (XmlElement) elements.get(2);
         XmlElement xmlElement1 = (XmlElement) elements.get(3);
         for (int i = 0; i < xmlElement.getElements().size(); i++) {
             XmlElement xmlEl = (XmlElement) xmlElement.getElements().get(i);
@@ -87,10 +88,10 @@ public class EmptyStrPlugin extends PluginAdapter {
     private static void addEmptyStrJudgment(XmlElement element, IntrospectedTable introspectedTable) {
         List<IntrospectedColumn> allColumns = introspectedTable.getAllColumns();
 
-        if (!(element.getElements().get(2) instanceof XmlElement element1)) {
+        if (!(element.getElements().get(2) instanceof XmlElement)) {
             return;
         }
-
+        XmlElement element1 = (XmlElement) element.getElements().get(2);
         for (int i = 0; i < element1.getElements().size(); i++) {
             XmlElement xmlEl = (XmlElement) element1.getElements().get(i);
             TextElement text = (TextElement) xmlEl.getElements().get(0);
