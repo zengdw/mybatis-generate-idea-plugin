@@ -102,6 +102,7 @@ public class PropertyUI {
         MyModule selectModule = (MyModule) this.moduleComboBox.getSelectedItem();
         VirtualFile virtualFile = ProjectUtil.guessModuleDir(selectModule.getModule());
         String currentDirectoryPath = virtualFile.getPresentableUrl().replace(File.separator, "/");
+        currentDirectoryPath = disposeModulePath(currentDirectoryPath, prefix);
 
         MyFileChooserDescriptor chooserDescriptor = new MyFileChooserDescriptor(false, true, false, false, false, false);
         chooserDescriptor.withFolderFilter(file -> ModuleUtil.moduleContainsFile(selectModule.getModule(), file, false))
@@ -110,11 +111,26 @@ public class PropertyUI {
         VirtualFile[] files = fileChooserDialog.choose(project);
         if (files.length == 0) return null;
         String selectFilePath = files[0].getPresentableUrl().replace(File.separator, "/");
-        selectFilePath = selectFilePath.replace(currentDirectoryPath + "/" + prefix, "");
+        selectFilePath = selectFilePath.replace(currentDirectoryPath + prefix, "");
         if (type == 1) {
-            return selectFilePath;
+            return selectFilePath.startsWith("/") ? selectFilePath.substring(1) : selectFilePath;
         }
         return selectFilePath.replace("/", ".").replaceFirst("\\.", "");
+    }
+
+    public static String disposeModulePath(String modulePath, String prePath) {
+        if (StringUtils.isBlank(prePath)) return modulePath;
+        String[] split = prePath.split("/");
+        for (int i = split.length - 1; i >= 0; i--) {
+            if (modulePath.endsWith("/")) {
+                modulePath = modulePath.substring(0, modulePath.length() - 1);
+            }
+            if (modulePath.endsWith(split[i])) {
+                modulePath = modulePath.substring(0, modulePath.length() - split[i].length());
+            }
+        }
+        if (!modulePath.endsWith("/")) modulePath = modulePath + "/";
+        return modulePath;
     }
 
     private void createUIComponents() {

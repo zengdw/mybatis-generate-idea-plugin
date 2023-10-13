@@ -4,6 +4,7 @@ import com.intellij.database.psi.DbTable;
 import com.intellij.openapi.project.ProjectUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.zengdw.mybatis.override.XmlFileMergerJaxp;
+import com.zengdw.mybatis.ui.PropertyUI;
 import com.zengdw.mybatis.vo.PropertyVO;
 import org.jetbrains.annotations.NotNull;
 import org.mybatis.generator.api.*;
@@ -214,24 +215,24 @@ public class GenerateCode {
         context.setJavaTypeResolverConfiguration(javaTypeResolverConfiguration);
 
         VirtualFile virtualFile = ProjectUtil.guessModuleDir(property.getModule().getModule());
-        String modulePath = virtualFile.getPresentableUrl().replace(File.separator, "/") + File.separator;
+        String modulePath = virtualFile.getPresentableUrl().replace(File.separator, "/");
 
         JavaModelGeneratorConfiguration javaModelGeneratorConfiguration = new JavaModelGeneratorConfiguration();
         javaModelGeneratorConfiguration.setTargetPackage(property.getJavaModelPackage());
-        javaModelGeneratorConfiguration.setTargetProject(modulePath + property.getJavaModelPath());
+        javaModelGeneratorConfiguration.setTargetProject(PropertyUI.disposeModulePath(modulePath, property.getJavaModelPath()) + property.getJavaModelPath());
         // 从数据库返回的值被清理前后的空格
         javaModelGeneratorConfiguration.addProperty("trimStrings", "true");
         context.setJavaModelGeneratorConfiguration(javaModelGeneratorConfiguration);
 
         SqlMapGeneratorConfiguration sqlMapGeneratorConfiguration = new SqlMapGeneratorConfiguration();
         sqlMapGeneratorConfiguration.setTargetPackage(property.getMapperXmlPackage());
-        sqlMapGeneratorConfiguration.setTargetProject(modulePath + property.getMapperXmlPath());
+        sqlMapGeneratorConfiguration.setTargetProject(PropertyUI.disposeModulePath(modulePath, property.getMapperXmlPath()) + property.getMapperXmlPath());
         context.setSqlMapGeneratorConfiguration(sqlMapGeneratorConfiguration);
 
         JavaClientGeneratorConfiguration javaClientGeneratorConfiguration = new JavaClientGeneratorConfiguration();
         javaClientGeneratorConfiguration.setConfigurationType("XMLMAPPER");
         javaClientGeneratorConfiguration.setTargetPackage(property.getMapperPackage());
-        javaClientGeneratorConfiguration.setTargetProject(modulePath + property.getMapperPath());
+        javaClientGeneratorConfiguration.setTargetProject(PropertyUI.disposeModulePath(modulePath, property.getMapperPath()) + property.getMapperPath());
         context.setJavaClientGeneratorConfiguration(javaClientGeneratorConfiguration);
 
         TableConfiguration tc = new TableConfiguration(context);
