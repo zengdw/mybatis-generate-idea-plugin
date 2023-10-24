@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "com.zengdw.mybatis"
-version = "2.1"
+version = "2.1.1"
 
 repositories {
     mavenLocal()
