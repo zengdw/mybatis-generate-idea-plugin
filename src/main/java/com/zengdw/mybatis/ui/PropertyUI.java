@@ -125,7 +125,7 @@ public class PropertyUI {
             if (modulePath.endsWith("/")) {
                 modulePath = modulePath.substring(0, modulePath.length() - 1);
             }
-            if (modulePath.endsWith(split[i])) {
+            if (modulePath.endsWith("/" + split[i])) {
                 modulePath = modulePath.substring(0, modulePath.length() - split[i].length());
             }
         }

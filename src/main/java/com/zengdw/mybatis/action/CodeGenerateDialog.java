@@ -42,10 +42,9 @@ public class CodeGenerateDialog extends DialogWrapper {
 
             new GenerateCode().generate();
             VirtualFileManager.getInstance().refreshWithoutFileWatcher(true);
-            Messages.showMessageDialog("success", "Tips", null);
+            Messages.showMessageDialog("Success", "Tips", null);
             super.doOKAction();
         } catch (Exception e) {
-            e.printStackTrace();
             Messages.showMessageDialog(new String(e.getMessage().getBytes(), StandardCharsets.UTF_8), "Error", null);
         }
     }
