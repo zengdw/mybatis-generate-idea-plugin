@@ -30,7 +30,7 @@ public class XmlRefContributor extends PsiReferenceContributor {
             PsiElement parent = ((XmlAttributeValueImpl) o).getParent();
             if (!(parent instanceof XmlAttributeImpl attribute)) return false;
             if (!"id".equals(attribute.getName())) return false;
-            if (!(attribute.getParent() instanceof XmlTag)) return false;
+            if (attribute.getParent() == null) return false;
             return MapperUtils.isElementWithinMybatisFile(attribute.getParent());
         }
     });
@@ -45,9 +45,18 @@ public class XmlRefContributor extends PsiReferenceContributor {
                         Project project = element.getProject();
                         PsiFile psiFile = element.getContainingFile();
                         XmlTag rootTag = ((XmlFileImpl) psiFile).getRootTag();
-                        String classRefName = rootTag.getAttributeValue("namespace");
-                        PsiClass psiClass = JavaPsiFacade.getInstance(project).findClass(classRefName, GlobalSearchScope.projectScope(project));
-                        PsiMethod[] methods = psiClass.findMethodsByName(attributeValue.getValue(), false);
+                        String classRefName = null;
+                        if (rootTag != null) {
+                            classRefName = rootTag.getAttributeValue("namespace");
+                        }
+                        PsiClass psiClass = null;
+                        if (classRefName != null) {
+                            psiClass = JavaPsiFacade.getInstance(project).findClass(classRefName, GlobalSearchScope.projectScope(project));
+                        }
+                        PsiMethod[] methods = new PsiMethod[0];
+                        if (psiClass != null) {
+                            methods = psiClass.findMethodsByName(attributeValue.getValue(), false);
+                        }
                         PsiReference[] psiReferences = new PsiReference[methods.length];
                         for (int i = 0; i < methods.length; i++) {
                             psiReferences[i] = new PsiRef(element, new TextRange(1, attributeValue.getValue().length() + 1), methods[i]);
