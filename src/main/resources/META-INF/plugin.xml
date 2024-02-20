@@ -53,13 +53,26 @@
   <depends>com.intellij.modules.lang</depends>
   <!--数据库工具和SQL语言PSI模型，检查，完成，重构，查询-->
   <depends>com.intellij.database</depends>
+  <depends>com.intellij.java</depends>
 
   <!-- Extension points defined by the plugin.
        Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html
        扩展点配置：defaultExtensionNs="com.intellij" 表示扩展了idea平台的核心功能
        defaultExtensionNs="com.intellij.database" 表示扩展了database插件的功能(扩展的插件必须配置在depends中)-->
   <extensions defaultExtensionNs="com.intellij">
-
+    <dom.fileMetaData implementation="com.zengdw.mybatis.xml.MapperDomFileDescription" rootTagName="mapper"/>
+    <!--添加行标记-->
+    <codeInsight.lineMarkerProvider language="JAVA"
+                                    implementationClass="com.zengdw.mybatis.provider.JavaLineMarkerProvider"/>
+    <codeInsight.lineMarkerProvider language="XML"
+                                    implementationClass="com.zengdw.mybatis.provider.XmlLineMarkerProvider"/>
+    <!-- Ctrl + Alt + B, 定位类的跳转, 定位方法的跳转 -->
+    <definitionsScopedSearch implementation="com.zengdw.mybatis.provider.MapperClassSearch"/>
+    <!--点击mapper xml id标签跳转到mapper类-->
+    <psi.referenceContributor language="XML" implementation="com.zengdw.mybatis.contributor.XmlRefContributor"/>
+    <!-- 在mapper.xml内部, 进行智能提示, 例如: #{提示位置} -->
+    <completion.contributor language="SQL" order="first"
+                            implementationClass="com.zengdw.mybatis.contributor.SqlParamCompletionContributor"/>
   </extensions>
   <actions>
     <action id="Mybatis-Generate" class="com.zengdw.mybatis.action.MybatisGenerateAction" text="Mybatis-Generate">

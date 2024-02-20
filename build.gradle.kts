@@ -14,7 +14,11 @@ repositories {
 
 dependencies {
     implementation("org.mybatis.generator:mybatis-generator-core:1.4.2")
-    implementation("com.github.javaparser:javaparser-symbol-solver-core:3.24.4")
+    implementation("com.github.javaparser:javaparser-symbol-solver-core:3.24.4") {
+        exclude(module = "guava")
+    }
+    implementation("com.google.guava:guava:32.1.2-jre")
+    compileOnly("org.projectlombok:lombok:1.18.30")
 
 }
 java {
@@ -28,23 +32,13 @@ intellij {
     version.set("2023.3")
     type.set("IU") // Target IDE Platform
 
-    plugins.set(listOf("com.intellij.database"))
+    plugins.set(listOf("com.intellij.database", "com.intellij.java"))
 }
 
 tasks {
     patchPluginXml {
         // 指定插件兼容的idea的最小和最大版本
         sinceBuild.set("233")
-//        untilBuild.set("232.*")
-    }
-
-    signPlugin {
-        certificateChain.set(System.getenv("CERTIFICATE_CHAIN"))
-        privateKey.set(System.getenv("PRIVATE_KEY"))
-        password.set(System.getenv("PRIVATE_KEY_PASSWORD"))
-    }
-
-    publishPlugin {
-        token.set(System.getenv("PUBLISH_TOKEN"))
+        // untilBuild.set("232.*")
     }
 }
