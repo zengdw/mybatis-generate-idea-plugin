@@ -272,9 +272,10 @@ public class CompositeHashMarkTip {
         IdDomElement domElement = DomUtil.findDomElement(myElement, IdDomElement.class);
         if (domElement != null) {
             Object value = domElement.getId().getValue();
-            if (!(value instanceof PsiMethod psiMethod)) {
+            if (!(value instanceof PsiMethod)) {
                 return null;
             }
+            PsiMethod psiMethod = (PsiMethod) value;
             PsiParameterList parameterList = psiMethod.getParameterList();
             if (parameterList.isEmpty()) {
                 return null;

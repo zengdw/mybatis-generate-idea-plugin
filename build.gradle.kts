@@ -22,14 +22,14 @@ dependencies {
 
 }
 java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
 }
 
 // Configure Gradle IntelliJ Plugin
 // Read more: https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
 intellij {
-    version.set("2021.1")
+    version.set("2020.3")
     type.set("IU") // Target IDE Platform
 
     plugins.set(listOf("com.intellij.database", "com.intellij.java"))
@@ -38,7 +38,7 @@ intellij {
 tasks {
     patchPluginXml {
         // 指定插件兼容的idea的最小和最大版本
-        sinceBuild.set("211")
+        sinceBuild.set("203")
         // untilBuild.set("232.*")
     }
 }

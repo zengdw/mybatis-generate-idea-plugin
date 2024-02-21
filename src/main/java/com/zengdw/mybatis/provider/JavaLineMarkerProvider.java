@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * java类行标记, 并提供对这些应用的导航。
@@ -54,7 +55,7 @@ public class JavaLineMarkerProvider extends RelatedItemLineMarkerProvider {
         List<PsiElement> targets = new ArrayList<>();
         for (PsiFile psiFile : psiFiles) {
             XmlFile xmlFile = (XmlFile) psiFile;
-            List<XmlTag> tagList = Arrays.stream(xmlFile.getRootTag().getSubTags()).filter(xmlTag -> xmlTag.getAttribute("id").getValue().equals(psiMethod.getName())).toList();
+            List<XmlTag> tagList = Arrays.stream(xmlFile.getRootTag().getSubTags()).filter(xmlTag -> xmlTag.getAttribute("id").getValue().equals(psiMethod.getName())).collect(Collectors.toList());
             targets.addAll(tagList);
         }
         if (targets.isEmpty()) return;

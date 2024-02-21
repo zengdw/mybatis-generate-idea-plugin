@@ -28,7 +28,8 @@ public class XmlRefContributor extends PsiReferenceContributor {
         public boolean accepts(@Nullable final Object o, final ProcessingContext context) {
             if (!(o instanceof XmlAttributeValue)) return false;
             PsiElement parent = ((XmlAttributeValueImpl) o).getParent();
-            if (!(parent instanceof XmlAttributeImpl attribute)) return false;
+            if (!(parent instanceof XmlAttributeImpl)) return false;
+            XmlAttributeImpl attribute = (XmlAttributeImpl) parent;
             if (!"id".equals(attribute.getName())) return false;
             if (attribute.getParent() == null) return false;
             return MapperUtils.isElementWithinMybatisFile(attribute.getParent());
