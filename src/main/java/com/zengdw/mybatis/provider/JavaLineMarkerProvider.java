@@ -48,7 +48,7 @@ public class JavaLineMarkerProvider extends RelatedItemLineMarkerProvider {
     private void psiMethodMarker(PsiMethod psiMethod, Collection<? super RelatedItemLineMarkerInfo<PsiElement>> result) {
         Project project = psiMethod.getProject();
         VirtualFile virtualFile = psiMethod.getContainingFile().getVirtualFile();
-        Collection<VirtualFile> virtualFiles = FilenameIndex.getVirtualFilesByName(virtualFile.getName().split("\\.")[0] + ".xml", GlobalSearchScope.projectScope(project));
+        Collection<VirtualFile> virtualFiles = FilenameIndex.getVirtualFilesByName(project, virtualFile.getName().split("\\.")[0] + ".xml", GlobalSearchScope.projectScope(project));
         List<PsiFile> psiFiles = PsiUtilCore.toPsiFiles(PsiManager.getInstance(project), virtualFiles);
         if (psiFiles.isEmpty()) return;
         List<PsiElement> targets = new ArrayList<>();
@@ -70,7 +70,7 @@ public class JavaLineMarkerProvider extends RelatedItemLineMarkerProvider {
     private void psiClassMarker(PsiClass psiClass, @NotNull Collection<? super RelatedItemLineMarkerInfo<PsiElement>> result) {
         Project project = psiClass.getProject();
         // 1. 查找与 class 类名同名的 xml 文件, 并追加到结果集合
-        Collection<VirtualFile> virtualFiles = FilenameIndex.getVirtualFilesByName(psiClass.getName() + ".xml", GlobalSearchScope.projectScope(project));
+        Collection<VirtualFile> virtualFiles = FilenameIndex.getVirtualFilesByName(project, psiClass.getName() + ".xml", GlobalSearchScope.projectScope(project));
         List<PsiFile> xmlFile = PsiUtilCore.toPsiFiles(PsiManager.getInstance(project), virtualFiles);
         if (xmlFile.isEmpty()) return;
         // 通过 NavigationGutterIconBuilder 构造跳转的信息，包括：

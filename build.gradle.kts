@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "com.zengdw.mybatis"
-version = "2.2"
+version = "3.0"
 
 repositories {
     mavenLocal()
@@ -29,7 +29,7 @@ java {
 // Configure Gradle IntelliJ Plugin
 // Read more: https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
 intellij {
-    version.set("2023.3")
+    version.set("2021.1")
     type.set("IU") // Target IDE Platform
 
     plugins.set(listOf("com.intellij.database", "com.intellij.java"))
@@ -38,7 +38,7 @@ intellij {
 tasks {
     patchPluginXml {
         // 指定插件兼容的idea的最小和最大版本
-        sinceBuild.set("233")
+        sinceBuild.set("211")
         // untilBuild.set("232.*")
     }
 }
