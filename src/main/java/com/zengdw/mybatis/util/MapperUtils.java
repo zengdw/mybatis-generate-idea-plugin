@@ -55,12 +55,12 @@ public class MapperUtils {
         return result;
     }
 
-    public static Collection<Mapper> findMappers(@NotNull Project project) {
+    public static List<Mapper> findMappers(@NotNull Project project) {
         return DomUtils.findDomElements(project, Mapper.class);
     }
 
-    public static Collection<Mapper> findMappers(Project project, PsiClass clazz) {
-        Collection<Mapper> mappers = null;
+    public static List<Mapper> findMappers(Project project, PsiClass clazz) {
+        List<Mapper> mappers = null;
         if (project == null || clazz == null) {
             mappers = Collections.emptyList();
         }
@@ -73,7 +73,7 @@ public class MapperUtils {
         return mappers;
     }
 
-    public static Collection<Mapper> findMappers(@NotNull Project project, @NotNull String namespace) {
+    public static List<Mapper> findMappers(@NotNull Project project, @NotNull String namespace) {
         List<Mapper> result = Lists.newArrayList();
         for (Mapper mapper : findMappers(project)) {
             if (getNamespace(mapper).equals(namespace)) {
@@ -91,6 +91,7 @@ public class MapperUtils {
     public static String getNamespace(@NotNull DomElement element) {
         return getNamespace(getMapper(element));
     }
+
     public static Mapper getMapper(@NotNull DomElement element) {
         Optional<Mapper> optional = Optional.ofNullable(DomUtil.getParentOfType(element, Mapper.class, true));
         if (optional.isPresent()) {
@@ -110,5 +111,5 @@ public class MapperUtils {
         }
         return Optional.ofNullable(DomUtil.getParentOfType(domElement, IdDomElement.class, true));
     }
-    
+
 }
