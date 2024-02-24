@@ -10,6 +10,7 @@ import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
+import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.xml.XmlDocument;
 import com.intellij.psi.xml.XmlElement;
 import com.intellij.psi.xml.XmlFile;
@@ -86,22 +87,18 @@ public abstract class AbstractIntentionAction extends PsiElementBaseIntentionAct
      */
     @Override
     public boolean isAvailable(@NotNull Project project, Editor editor, @NotNull PsiElement psiElement) {
-        PsiElement psiMethod = psiElement.getParent();
-        if (!(psiMethod instanceof PsiMethod)) return false;
-        PsiElement psiClass = psiMethod.getParent();
-        if (!(psiClass instanceof PsiClass)) return false;
-
-        Collection<Mapper> mappers = MapperUtils.findMappers(project, (PsiClass) psiClass);
+        // 直接尝试获取当前元素所在的PsiClass
+        PsiClass psiClass = PsiTreeUtil.getParentOfType(psiElement, PsiClass.class);
+        if(psiClass == null) return false;
+        Collection<Mapper> mappers = MapperUtils.findMappers(project, psiClass);
         if (mappers.isEmpty()) return false;
 
-        Collection<XmlElement> tags = MapperUtils.findTags(project, (PsiMethod) psiMethod);
+        PsiMethod psiMethod = PsiTreeUtil.getParentOfType(psiElement, PsiMethod.class);
+        if (psiMethod == null) return false;
+        Collection<XmlElement> tags = MapperUtils.findTags(project, psiMethod);
         return tags.isEmpty();
     }
 
-    /**
-     * 返回一个描述此类快捷操作所属组别的字符串
-     * 多个意图操作只有返回相同字符串就可以属于同一个组
-     */
     @Override
     public @NotNull @IntentionFamilyName String getFamilyName() {
         return "generateXmlMethod";
