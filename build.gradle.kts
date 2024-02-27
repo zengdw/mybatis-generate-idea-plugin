@@ -21,10 +21,6 @@ dependencies {
     compileOnly("org.projectlombok:lombok:1.18.30")
 
 }
-java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
-}
 
 // Configure Gradle IntelliJ Plugin
 // Read more: https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
@@ -36,9 +32,14 @@ intellij {
 }
 
 tasks {
+    withType<JavaCompile> {
+        sourceCompatibility = "11"
+        targetCompatibility = "11"
+    }
+
     patchPluginXml {
         // 指定插件兼容的idea的最小和最大版本
-        sinceBuild.set("203")
-        // untilBuild.set("232.*")
+        sinceBuild.set("203.*")
+        untilBuild.set("233.*")
     }
 }

@@ -54,8 +54,7 @@ public abstract class AbstractIntentionAction extends PsiElementBaseIntentionAct
     @Override
     public void invoke(@NotNull Project project, Editor editor, @NotNull PsiElement psiElement) throws IncorrectOperationException {
         // 在这里编写你的操作逻辑，当用户按下Alt+Enter时触发
-        PsiMethod method = (PsiMethod) psiElement.getParent();
-        PsiClass psiClass = (PsiClass) method.getParent();
+        PsiClass psiClass = PsiTreeUtil.getParentOfType(psiElement, PsiClass.class);
 
         List<Mapper> mappers = MapperUtils.findMappers(project, psiClass);
         PsiFile psiFile = mappers.get(0).getXmlElement().getContainingFile();
@@ -63,7 +62,8 @@ public abstract class AbstractIntentionAction extends PsiElementBaseIntentionAct
         XmlDocument document = xmlFile.getDocument();
         if (document != null) {
             XmlElementFactory elementFactory = XmlElementFactory.getInstance(project);
-            XmlTag xmlTag = elementFactory.createTagFromText(xmlTagStr(method), document.getLanguage());
+            PsiMethod psiMethod = PsiTreeUtil.getParentOfType(psiElement, PsiMethod.class);
+            XmlTag xmlTag = elementFactory.createTagFromText(xmlTagStr(psiMethod), document.getLanguage());
             // 使用WriteCommandAction进行安全的异步修改（避免数据同步问题）
             ApplicationManager.getApplication().invokeAndWait(() -> WriteCommandAction.runWriteCommandAction(psiElement.getProject(), () -> {
                 document.getRootTag().addSubTag(xmlTag, false);
@@ -89,7 +89,7 @@ public abstract class AbstractIntentionAction extends PsiElementBaseIntentionAct
     public boolean isAvailable(@NotNull Project project, Editor editor, @NotNull PsiElement psiElement) {
         // 直接尝试获取当前元素所在的PsiClass
         PsiClass psiClass = PsiTreeUtil.getParentOfType(psiElement, PsiClass.class);
-        if(psiClass == null) return false;
+        if (psiClass == null) return false;
         Collection<Mapper> mappers = MapperUtils.findMappers(project, psiClass);
         if (mappers.isEmpty()) return false;
 
