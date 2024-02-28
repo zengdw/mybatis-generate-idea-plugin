@@ -5,6 +5,9 @@ import com.intellij.codeInspection.util.IntentionFamilyName;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.LogicalPosition;
+import com.intellij.openapi.editor.ScrollType;
+import com.intellij.openapi.editor.ScrollingModel;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
@@ -65,18 +68,21 @@ public abstract class AbstractIntentionAction extends PsiElementBaseIntentionAct
             PsiMethod psiMethod = PsiTreeUtil.getParentOfType(psiElement, PsiMethod.class);
             XmlTag xmlTag = elementFactory.createTagFromText(xmlTagStr(psiMethod), document.getLanguage());
             // 使用WriteCommandAction进行安全的异步修改（避免数据同步问题）
-            ApplicationManager.getApplication().invokeAndWait(() -> WriteCommandAction.runWriteCommandAction(psiElement.getProject(), () -> {
+            ApplicationManager.getApplication().invokeLater(() -> WriteCommandAction.runWriteCommandAction(project, () -> {
                 document.getRootTag().addSubTag(xmlTag, false);
-
                 // 确保所有更改已提交到文档
-                PsiDocumentManager.getInstance(psiElement.getProject()).commitAllDocuments();
-            }));
+                PsiDocumentManager.getInstance(project).commitAllDocuments();
 
-            VirtualFile virtualFile = psiFile.getVirtualFile();
-            // 打开指定文件并定位到编辑器
-            FileEditorManager fileEditorManager = FileEditorManager.getInstance(project);
-            OpenFileDescriptor descriptor = new OpenFileDescriptor(project, virtualFile);
-            fileEditorManager.openTextEditor(descriptor, true);
+                VirtualFile virtualFile = psiFile.getVirtualFile();
+                // 打开指定文件并定位到编辑器
+                FileEditorManager fileEditorManager = FileEditorManager.getInstance(project);
+                OpenFileDescriptor descriptor = new OpenFileDescriptor(project, virtualFile);
+                Editor editor1 = fileEditorManager.openTextEditor(descriptor, true);
+                // 获取当前编辑器的滚动模型
+                ScrollingModel scrollingModel = editor1.getScrollingModel();
+                // 滚动到最底部
+                scrollingModel.scrollTo(new LogicalPosition(editor1.getDocument().getLineCount(), 0), ScrollType.CENTER);
+            }));
         }
     }
 

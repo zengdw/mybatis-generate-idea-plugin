@@ -19,13 +19,12 @@ dependencies {
     }
     implementation("com.google.guava:guava:32.1.2-jre")
     compileOnly("org.projectlombok:lombok:1.18.30")
-
 }
 
 // Configure Gradle IntelliJ Plugin
 // Read more: https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
 intellij {
-    version.set("2020.3")
+    version.set("2020.3.1")
     type.set("IU") // Target IDE Platform
 
     plugins.set(listOf("com.intellij.database", "com.intellij.java"))
@@ -39,7 +38,7 @@ tasks {
 
     patchPluginXml {
         // 指定插件兼容的idea的最小和最大版本
-        sinceBuild.set("203.*")
+        sinceBuild.set("203.6682.168")
         untilBuild.set("233.*")
     }
 }
