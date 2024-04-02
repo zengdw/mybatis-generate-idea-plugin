@@ -199,6 +199,11 @@ public class GenerateCode {
             pluginConfiguration.addProperty("suppressJavaInterface", "false");
             context.addPluginConfiguration(pluginConfiguration);
         }
+        if (property.isExample()) {
+            PluginConfiguration pluginConfiguration = new PluginConfiguration();
+            pluginConfiguration.setConfigurationType("com.zengdw.mybatis.plugins.BlobFiledExamplePlugin");
+            context.addPluginConfiguration(pluginConfiguration);
+        }
         PluginConfiguration mapperSelectivePluginConfiguration = new PluginConfiguration();
         mapperSelectivePluginConfiguration.setConfigurationType("com.zengdw.mybatis.plugins.MapperSelectivePlugin");
         context.addPluginConfiguration(mapperSelectivePluginConfiguration);
