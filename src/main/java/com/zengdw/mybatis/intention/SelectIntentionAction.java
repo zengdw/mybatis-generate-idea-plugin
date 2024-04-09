@@ -5,7 +5,8 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethod;
-import com.intellij.psi.PsiParameterList;
+import com.intellij.psi.PsiPrimitiveType;
+import com.intellij.psi.PsiType;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,14 +22,14 @@ public class SelectIntentionAction extends AbstractIntentionAction {
 
     @Override
     protected String xmlTagStr(PsiMethod method) {
-        PsiParameterList parameterList = method.getParameterList();
-        int parametersCount = parameterList.getParametersCount();
         String xmlTagStr = "<select id=\"" + method.getName() + "\" ";
-        if (parametersCount == 1) {
-            String parameterType = parameterList.getParameter(0).getType().getCanonicalText();
-            xmlTagStr += "parameterType=\""+parameterType+"\"";
+        PsiType psiType = method.getReturnType();
+        if (psiType instanceof PsiPrimitiveType) {
+            String resultType = ((PsiPrimitiveType) psiType).getKind().getBoxedFqn();
+            xmlTagStr += " resultType=\"" + resultType + "\">\n\n</select>";
+        } else {
+            xmlTagStr += " resultMap=\"BaseResultMap\">\n\n</select>";
         }
-        xmlTagStr += " resultMap=\"BaseResultMap\">\n\n</select>";
         return xmlTagStr;
     }
 
