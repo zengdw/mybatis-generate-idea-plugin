@@ -1,0 +1,1 @@
+# Mybatis Generate idea plugin
