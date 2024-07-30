@@ -272,6 +272,7 @@ public class GenerateCode {
             true	当该属性为 true 时，如果数据库列的类型为 DECIMAL 或 NUMERIC，则 Java 类型解析程序将始终使用 java.math.BigDecimal 。
          */
         javaTypeResolverConfiguration.addProperty("forceBigDecimals", "false");
+        javaTypeResolverConfiguration.setConfigurationType("com.zengdw.mybatis.resolver.CustomJavaTypeResolver");
         return javaTypeResolverConfiguration;
     }
 }

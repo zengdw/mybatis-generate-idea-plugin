@@ -298,6 +298,16 @@
               <text value="mergeFile"/>
             </properties>
           </component>
+          <component id="eab1e" class="javax.swing.JCheckBox" binding="isInt">
+            <constraints>
+              <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <enabled value="true"/>
+              <selected value="false"/>
+              <text value="isInt"/>
+            </properties>
+          </component>
         </children>
       </grid>
       <vspacer id="4b742">

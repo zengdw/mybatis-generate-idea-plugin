@@ -44,6 +44,7 @@ public class PropertyUI {
     private JCheckBox serializableCheckBox;
     private JCheckBox mergeFileCheckBox;
     private JCheckBox blobBox;
+    private JCheckBox isInt;
     private final Project project;
     private final Module[] moduleList;
 
@@ -155,6 +156,7 @@ public class PropertyUI {
         serializableCheckBox.setSelected(data.isSerializable());
         blobBox.setSelected(data.getBlob());
         mergeFileCheckBox.setSelected(data.isMergeFile());
+        isInt.setSelected(data.getInt());
     }
 
     public void getData(PropertyVO data) throws Exception {
@@ -173,6 +175,7 @@ public class PropertyUI {
         data.setSerializable(serializableCheckBox.isSelected());
         data.setBlob(blobBox.isSelected());
         data.setMergeFile(mergeFileCheckBox.isSelected());
+        data.setInt(isInt.isSelected());
     }
 
     private String isEmpty(String path) throws Exception {

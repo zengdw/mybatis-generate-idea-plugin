@@ -28,9 +28,13 @@
 
   <change-notes>
     <![CDATA[
-      <h2>New Features</h2>
+      <h2>3.0.1</h2>
       <ul>
-        <li>支持IDEA最新版本</li>
+        <li>数据库number字段长度小于4位且无小数位时，可选都使用java.lang.Integer类型，不生成Short类型</li>
+      </ul>
+      <h2>2.1.1 bug修复</h2>
+      <ul>
+        <li>修复选择代码包时包路径异常</li>
       </ul>
       <h2>2.1 bug修复</h2>
       <ul>
@@ -38,10 +42,6 @@
         <li>当不使用example时，添加，修改方法字段添加空判断</li>
         <li>多表同时生成时异常修复</li>
         <li>修复gradle下模块路径异常</li>
-      </ul>
-      <h2>2.1.1 bug修复</h2>
-      <ul>
-        <li>修复选择代码包时包路径异常</li>
       </ul>
     ]]>
   </change-notes>
@@ -92,7 +92,7 @@
       <className>com.zengdw.mybatis.intention.SelectIntentionAction</className>
     </intentionAction>
   </extensions>
-    
+
   <actions>
     <action id="Mybatis-Generate" class="com.zengdw.mybatis.action.MybatisGenerateAction" text="Mybatis-Generate">
       <add-to-group group-id="DatabaseViewPopupMenu" anchor="first"/>

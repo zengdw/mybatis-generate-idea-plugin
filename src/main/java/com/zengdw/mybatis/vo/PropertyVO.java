@@ -25,6 +25,7 @@ public class PropertyVO {
     private List<DbTable> tableList;
     private String dbType;
     private Boolean blob = false;
+    private Boolean isInt = false;
     private static PropertyVO instance;
 
     public static PropertyVO of() {
@@ -171,5 +172,13 @@ public class PropertyVO {
 
     public void setDbType(String dbType) {
         this.dbType = dbType;
+    }
+
+    public Boolean getInt() {
+        return isInt;
+    }
+
+    public void setInt(Boolean anInt) {
+        isInt = anInt;
     }
 }
