@@ -39,6 +39,6 @@ tasks {
     patchPluginXml {
         // 指定插件兼容的idea的最小和最大版本
         sinceBuild.set("203.6682.168")
-        untilBuild.set("241.*")
+        untilBuild.set("242.*")
     }
 }
