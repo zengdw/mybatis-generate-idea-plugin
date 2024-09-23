@@ -28,6 +28,10 @@
 
   <change-notes>
     <![CDATA[
+      <h2>3.1.0</h2>
+      <ul>
+        <li>支持idea 2024.2版本</li>
+      </ul>
       <h2>3.0.1</h2>
       <ul>
         <li>数据库number字段长度小于4位且无小数位时，可选都使用java.lang.Integer类型，不生成Short类型</li>
