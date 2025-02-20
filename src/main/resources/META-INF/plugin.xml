@@ -22,12 +22,35 @@
         <li>example query</li>
         <li>Generated code merge</li>
         <li>blob large fields are generated in the same class</li>
+        <li>XML methods are automatically generated based on the Mapper API</li>
+        <li>Hints for writing SQL parameters in XML</li>
+        <li>The mapper method jumps to an XML file</li>
+        <li>When you call the mapper method, you will be redirected to the xml file</li>
+      </ol>
+
+      <h1>Mybatis Generate idea plugin</h1>
+      MyBatis 自动生成实体、映射器和 XML.
+      <ol>
+        <li>lombok插件支持</li>
+        <li>example查询支持</li>
+        <li>支持生成实体，mapper，xml文件合并，保留添加的自定义代码</li>
+        <li>表blob，clob等大字段可选择生成到同一个实体类</li>
+        <li>根据mapper接口自动生成xml方法</li>
+        <li>xml编写sql参数提示</li>
+        <li>mapper方法跳转到xml文件</li>
+        <li>调用mapper方法处直接跳转到xml文件</li>
       </ol>
     ]]>
   </description>
 
   <change-notes>
     <![CDATA[
+      <h2>3.2.0</h2>
+      <ul>
+        <li>支持idea最新版本</li>
+        <li>升级idea插件到2.x版本</li>
+        <li>移除Deprecated的api</li>
+      </ul>
       <h2>3.1.0</h2>
       <ul>
         <li>支持idea 2024.2版本</li>

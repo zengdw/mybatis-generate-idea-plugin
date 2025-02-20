@@ -1,5 +1,6 @@
 package com.zengdw.mybatis.ui;
 
+import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.ex.FileChooserDialogImpl;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
@@ -7,7 +8,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectUtil;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.zengdw.mybatis.override.MyFileChooserDescriptor;
 import com.zengdw.mybatis.vo.MyModule;
 import com.zengdw.mybatis.vo.PropertyVO;
 import org.apache.commons.lang3.StringUtils;
@@ -105,8 +105,8 @@ public class PropertyUI {
         String currentDirectoryPath = virtualFile.getPresentableUrl().replace(File.separator, "/");
         currentDirectoryPath = disposeModulePath(currentDirectoryPath, prefix);
 
-        MyFileChooserDescriptor chooserDescriptor = new MyFileChooserDescriptor(false, true, false, false, false, false);
-        chooserDescriptor.withFolderFilter(file -> ModuleUtil.moduleContainsFile(selectModule.getModule(), file, false))
+        FileChooserDescriptor chooserDescriptor = new FileChooserDescriptor(false, true, false, false, false, false);
+        chooserDescriptor.withFileFilter(file -> file.isDirectory() && ModuleUtil.moduleContainsFile(selectModule.getModule(), file, false))
                 .withRoots(virtualFile);
         FileChooserDialogImpl fileChooserDialog = new FileChooserDialogImpl(chooserDescriptor, project);
         VirtualFile[] files = fileChooserDialog.choose(project);

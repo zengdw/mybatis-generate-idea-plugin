@@ -3,6 +3,7 @@ package com.zengdw.mybatis.action;
 import com.intellij.database.psi.DbDataSource;
 import com.intellij.database.psi.DbTable;
 import com.intellij.database.util.DbUtil;
+import com.intellij.openapi.actionSystem.ActionUpdateThread;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.LangDataKeys;
@@ -21,6 +22,7 @@ import java.util.stream.Stream;
  */
 public class MybatisGenerateAction extends AnAction {
 
+    @SuppressWarnings("DataFlowIssue")
     @Override
     public void actionPerformed(AnActionEvent e) {
         // 获取选中的表
@@ -41,7 +43,13 @@ public class MybatisGenerateAction extends AnAction {
     }
 
     @Override
+    public @NotNull ActionUpdateThread getActionUpdateThread() {
+        return ActionUpdateThread.BGT;
+    }
+
+    @Override
     public void update(@NotNull AnActionEvent e) {
+        // 使用 ReadAction 包装 PSI 操作
         PsiElement[] elements = e.getData(LangDataKeys.PSI_ELEMENT_ARRAY);
         boolean visible = elements != null && elements.length > 0 && Stream.of(elements).anyMatch(el -> DbTable.class.isAssignableFrom(el.getClass()));
         // 设置按钮隐藏

@@ -1,15 +1,18 @@
 plugins {
-    id("java")
-    id("org.jetbrains.intellij") version "1.13.2"
+    id("org.jetbrains.intellij.platform") version "2.2.1"
 }
 
 group = "com.zengdw.mybatis"
-version = "3.1.0"
+version = "3.2.0"
 
 repositories {
     mavenLocal()
     maven("https://maven.aliyun.com/repository/public/")
     mavenCentral()
+
+    intellijPlatform {
+        defaultRepositories()
+    }
 }
 
 dependencies {
@@ -19,26 +22,28 @@ dependencies {
     }
     implementation("com.google.guava:guava:32.1.2-jre")
     compileOnly("org.projectlombok:lombok:1.18.30")
+
+    intellijPlatform {
+        val type = providers.gradleProperty("platformType").get()
+        val version = providers.gradleProperty("platformVersion").get()
+        create(type, version)
+//        local("C:\\JetBrains\\IntelliJ IDEA Ultimate")
+        bundledPlugins(providers.gradleProperty("platformBundledPlugins").map { it.split(',') })
+    }
 }
 
-// Configure Gradle IntelliJ Plugin
-// Read more: https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
-intellij {
-    version.set("2024.1")
-    type.set("IU") // Target IDE Platform
-
-    plugins.set(listOf("com.intellij.database", "com.intellij.java"))
+intellijPlatform {
+    pluginConfiguration {
+        ideaVersion {
+            sinceBuild = "232.*"
+            untilBuild = provider { null }
+        }
+    }
 }
 
 tasks {
     withType<JavaCompile> {
         sourceCompatibility = "17"
         targetCompatibility = "17"
-    }
-
-    patchPluginXml {
-        // 指定插件兼容的idea的最小和最大版本
-        sinceBuild.set("203.6682.168")
-        untilBuild.set("242.*")
     }
 }
